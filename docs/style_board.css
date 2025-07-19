@@ -1,0 +1,113 @@
+/* ================ */
+/* === 数独棋盘 === */
+/* ================ */
+#board {
+    display: grid;
+    background: transparent;
+}
+
+/* 数独格子 */
+.cell {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Tahoma', 'Microsoft Sans Serif', 'Arial', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* 已填充的格子 */
+.cell.filled {
+    /* 已填充数字的格子样式 */
+}
+
+/* ================== */
+/* === 数字按钮区 === */
+/* ================== */
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px auto;
+    width: fit-content;
+    padding: 8px;
+    background: transparent;
+}
+
+/* 数字按钮行 */
+.number-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+/* 基础数字按钮样式 */
+.number-button {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    font-family: 'Tahoma', 'Microsoft Sans Serif', 'Arial', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 数字按钮悬停状态 */
+.number-button:hover {
+    background: rgba(252, 252, 252, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 数字按钮选中状态 */
+.number-button.selected {
+    color: rgba(0, 0, 0, 0.8) !important;
+    background: rgba(255, 255, 255, 0.8);
+    border-color: gold !important;
+    box-shadow: 0 0 10px 3px rgba(255, 215, 0, 0.6),
+    0 0 20px 6px rgba(255, 255, 150, 0.4);
+}
+
+/* 重开按钮特殊样式 */
+.number-button.restart-button {
+    background: rgba(255, 165, 0, 0.3);
+    border-color: rgba(255, 165, 0, 0.6);
+}
+
+.number-button.restart-button:hover {
+    background: rgba(255, 165, 0, 0.4);
+}
+
+/* ================== */
+/* === 响应式设计 === */
+/* ================== */
+@media (max-width: 600px) {
+    .button-container {
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .number-button {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        font-size: 18px;
+        border-width: 1px;
+    }
+}
