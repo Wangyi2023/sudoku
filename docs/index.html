@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Minesweeper</title>
+    <title>Sudoku</title>
     <link rel="stylesheet" href="style.css" />
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 </head>
@@ -44,15 +44,17 @@
                 <button class="button" onclick="start_game()">Restart</button>
             </div>
 
-            <div class="sidebar-button dropdown">
-                <button class="button" onclick="toggle_difficulty_dropdown()">Difficulty</button>
-                <div id="difficulty-menu" class="dropdown-menu">
-                    <div onclick="select_difficulty('low')">Low</div>
-                    <div onclick="select_difficulty('medium')">Medium</div>
-                    <div onclick="select_difficulty('high')">High</div>
-                    <div onclick="select_difficulty('fullscreen')">Fullscreen</div>
-                </div>
+            <!-- 找到Difficulty下拉菜单部分，替换为： -->
+            <div class="sidebar-button">
+                <input type="number" id="empty-cells-input" min="1" max="81" value="30" class="button" style="text-align: center;">
+                <button class="button" onclick="apply_difficulty()">Apply Difficulty</button>
             </div>
+
+            <!-- 删除Solve All按钮部分： -->
+            <!-- 删除以下代码块 -->
+            <!-- <div class="sidebar-button">
+                <button class="button" onclick="solve_all()">Solve All</button>
+            </div> -->
 
             <div class="sidebar-button dropdown">
                 <button class="button" onclick="toggle_background_dropdown()">Background</button>
@@ -71,10 +73,6 @@
             </div>
 
             <div class="sidebar-button">
-                <button class="button" onclick="solve_all()">Solve All</button>
-            </div>
-
-            <div class="sidebar-button">
                 <button class="button" onclick="toggle_guide()">Guide</button>
             </div>
 
@@ -86,9 +84,22 @@
 
 <div class="main-content">
     <div class="header">
-        <h1>Minesweeper</h1>
+        <h1>Sudoku</h1>
     </div>
     <div id="board"></div>
+
+    <!-- 数字按钮区域 - 放在这里 -->
+    <div class="number-buttons">
+        <button class="number-button">1</button>
+        <button class="number-button">2</button>
+        <button class="number-button">3</button>
+        <button class="number-button">4</button>
+        <button class="number-button">5</button>
+        <button class="number-button">6</button>
+        <button class="number-button">7</button>
+        <button class="number-button">8</button>
+        <button class="number-button">9</button>
+    </div>
 </div>
 
 <script src="script.js"></script>

@@ -81,44 +81,62 @@ body::before {
     display: grid;
     background: transparent;
 }
-
+/* 更新单元格样式 */
 .cell {
-    background-color: rgba(1, 1, 1, 0.4);
-    width: 20px;
-    height: 20px;
-    box-sizing: border-box;
-    cursor: pointer;
-    font-family: 'Tahoma', 'Microsoft Sans Serif', 'Arial', sans-serif;
-    font-size: 14px;
-    font-weight: bold;
-    color: white;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #FFD700; /* 金色数字 */
+    border: 1px solid #666;
+    cursor: pointer;
     user-select: none;
-    position: relative;
-    transition: none !important;
+    transition: background-color 0.2s;
 }
 
-.cell.revealed {}
-
-.cell:not(.revealed) {
-    background-color: rgba(20, 20, 20, 0.75);
-    z-index: 2;
+.cell:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-.cell.mine {
-    position: relative;
+/* 数字按钮样式 */
+.number-button {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: rgba(252, 252, 252, 0.15);
+    color: white;
+    border: 1px solid #666;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-.cell.mine::before {
-    content: "";
+.number-button:hover {
+    background-color: rgba(252, 252, 252, 0.25);
+}
+
+.number-button:active {
+    transform: translate(1px, 1px);
+}
+
+.number-button {
+    /* 原有样式不变 */
+    transition: background-color 0.2s;
+}
+
+.number-button.selected {
+    background-color: #4CAF50;
+}
+
+.cell:not(.filled):hover::after {
+    content: attr(data-current-number);
     position: absolute;
-    width: 60%;
-    height: 60%;
-    top: 20%;
-    left: 20%;
-    background-color: red;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 20px;
 }
 
 #difficulty option {
@@ -317,4 +335,25 @@ body.sidebar-collapsed .expand-button {
 
 .close-button:hover {
     color: #000;
+}
+
+
+/* 添加输入框样式 */
+#empty-cells-input {
+    width: 100%;
+    margin-bottom: 5px;
+    background: rgba(252, 252, 252, 0.15);
+    color: rgba(252, 252, 252, 0.9);
+    border: 1.5px solid;
+    border-color: #f8f8f8 #a8a8a8 #a8a8a8 #f8f8f8;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    padding: 6px;
+    box-sizing: border-box;
+}
+
+#empty-cells-input:focus {
+    outline: none;
+    background: rgba(252, 252, 252, 0.25);
 }
