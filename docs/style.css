@@ -2,7 +2,7 @@
 /* === 全局变量和基础样式 === */
 /* ========================== */
 :root {
-    --background-url: url("Background_Collection/background_default.jpg"); /* 背景图片路径 */
+    --background-url: url("Background_Collection/background_default.jpg"); /* 背景图片路径变量 */
 }
 
 /* 基础页面样式 */
@@ -76,6 +76,16 @@ body::before {
     font-size: 16px;
     padding: 5px 10px;
     margin-right: -10px;
+    position: relative;
+}
+
+.collapse-handle::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    bottom: -10px;
+    left: -10px;
+    right: -10px;
 }
 
 /* 侧边栏折叠状态 */
@@ -85,6 +95,7 @@ body.sidebar-collapsed .sidebar {
 
 /* 展开按钮 */
 .expand-button {
+    background-color: transparent;
     position: fixed;
     left: 20px;
     top: 20px;
@@ -155,13 +166,16 @@ h1 {
     border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-/* 已填充的格子 */
-.cell.filled {
-    /* 已填充数字的格子样式 */
+/* 格子悬停效果 */
+.cell:not(.filled):hover::after {
+    content: attr(data-current-number);
+    position: absolute;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 20px;
 }
 
 /* ================== */
-/* === 数字按钮区 === */
+/* === 控制按钮区 === */
 /* ================== */
 .button-container {
     display: flex;
@@ -198,6 +212,8 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    top: 0;
 }
 
 /* 数字按钮悬停状态 */
@@ -207,13 +223,47 @@ h1 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* 数字按钮按下状态 */
+.number-button:active {
+    transform: translateY(2px);
+    box-shadow: none;
+}
+
 /* 数字按钮选中状态 */
 .number-button.selected {
     color: rgba(0, 0, 0, 0.8) !important;
     background: rgba(255, 255, 255, 0.8);
     border-color: gold !important;
+    text-shadow: none !important;
     box-shadow: 0 0 10px 3px rgba(255, 215, 0, 0.6),
     0 0 20px 6px rgba(255, 255, 150, 0.4);
+    position: relative;
+    z-index: 1;
+}
+
+.number-button.selected::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border-radius: 16px;
+    background: radial-gradient(
+            circle at center,
+            rgba(255, 255, 150, 0.8) 0%,
+            rgba(255, 255, 150, 0) 70%
+    );
+    animation: pulseGlow 1.5s infinite ease-in-out;
+    z-index: -1;
+    opacity: 0.7;
+}
+
+/* 选中按钮悬停效果 */
+.number-button.selected:hover {
+    transform: scale(1.1) translateY(-2px);
+    box-shadow: 0 0 12px 4px rgba(255, 215, 0, 0.7),
+    0 0 24px 8px rgba(255, 255, 150, 0.5) !important;
 }
 
 /* 重开按钮特殊样式 */
@@ -226,15 +276,43 @@ h1 {
     background: rgba(255, 165, 0, 0.4);
 }
 
+/* 禁用状态 */
+.number-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* 点击涟漪效果 */
+.number-button::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 1%, transparent 1%) no-repeat 50%;
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.6s;
+}
+
+.number-button:active::after {
+    transform: scale(1);
+    opacity: 0.3;
+    transition: 0s;
+}
+
 /* ================== */
 /* === 侧边栏控件 === */
 /* ================== */
-/* 下拉菜单 */
 .dropdown {
     position: relative;
     width: 100%;
 }
 
+/* 下拉菜单 */
+#difficulty-menu,
 #background-menu {
     display: none;
     position: absolute;
@@ -249,6 +327,7 @@ h1 {
 }
 
 /* 下拉菜单项 */
+#difficulty-menu div,
 #background-menu div {
     background-color: rgba(252, 252, 252, 0.5);
     padding: 6px 20px;
@@ -259,6 +338,7 @@ h1 {
     font-weight: bold;
 }
 
+#difficulty-menu div:hover,
 #background-menu div:hover {
     background-color: rgba(252, 252, 252, 0.8);
 }
@@ -286,6 +366,12 @@ h1 {
     display: block;
 }
 
+.button:active {
+    border-color: #a8a8a8 #f8f8f8 #f8f8f8 #a8a8a8 !important;
+    transform: translate(1px, 1px) !important;
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2) !important;
+}
+
 /* 难度输入框 */
 #empty-cells-input {
     width: 100%;
@@ -299,6 +385,11 @@ h1 {
     text-align: center;
     padding: 6px;
     box-sizing: border-box;
+}
+
+#empty-cells-input:focus {
+    outline: none;
+    background: rgba(252, 252, 252, 0.25);
 }
 
 /* 信息框 */
@@ -376,6 +467,10 @@ h1 {
     color: #666;
 }
 
+.close-button:hover {
+    color: #000;
+}
+
 /* ================== */
 /* === 动画效果 === */
 /* ================== */
@@ -387,6 +482,13 @@ h1 {
     50% {
         transform: scale(1.1);
         opacity: 0.9;
+    }
+}
+
+@keyframes buttonRipple {
+    to {
+        transform: scale(4);
+        opacity: 0;
     }
 }
 
