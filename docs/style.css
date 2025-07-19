@@ -2,10 +2,9 @@
 /* === 全局变量和基础样式 === */
 /* ========================== */
 :root {
-    --background-url: url("Background_Collection/background_default.jpg"); /* 背景图片路径变量 */
+    --background-url: url("Background_Collection/background_default.jpg");
 }
 
-/* 基础页面样式 */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: rgba(255, 255, 255, 0.6);
@@ -16,7 +15,6 @@ body {
     transition: all 0.1s ease;
 }
 
-/* 背景图片层 */
 body::before {
     content: "";
     position: fixed;
@@ -30,90 +28,6 @@ body::before {
     opacity: 0.75;
     z-index: -1;
     pointer-events: none;
-}
-
-/* ================== */
-/* === 侧边栏样式 === */
-/* ================== */
-.sidebar {
-    width: 200px;
-    height: 100vh;
-    position: fixed;
-    left: 0;
-    top: 0;
-    transition: all 0.1s ease;
-    z-index: 100;
-    background-color: rgba(1, 1, 1, 0.6);
-}
-
-/* 侧边栏内容区域 */
-.sidebar-content {
-    width: 100%;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    height: 100%;
-    box-sizing: border-box;
-}
-
-/* 侧边栏标题 */
-.sidebar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 18px;
-    font-weight: bold;
-    color: rgba(252, 252, 252, 0.8);
-    padding: 5px 0;
-    border-bottom: 2px solid #b8b8b8;
-    margin-bottom: 10px;
-}
-
-/* 侧边栏折叠按钮 */
-.collapse-handle {
-    cursor: pointer;
-    font-size: 16px;
-    padding: 5px 10px;
-    margin-right: -10px;
-    position: relative;
-}
-
-.collapse-handle::after {
-    content: "";
-    position: absolute;
-    top: -10px;
-    bottom: -10px;
-    left: -10px;
-    right: -10px;
-}
-
-/* 侧边栏折叠状态 */
-body.sidebar-collapsed .sidebar {
-    transform: translateX(-100%);
-}
-
-/* 展开按钮 */
-.expand-button {
-    background-color: transparent;
-    position: fixed;
-    left: 20px;
-    top: 20px;
-    width: 30px;
-    height: 30px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 90;
-    opacity: 0;
-    pointer-events: none;
-}
-
-body.sidebar-collapsed .expand-button {
-    opacity: 1;
-    pointer-events: auto;
 }
 
 /* ================== */
@@ -149,7 +63,6 @@ h1 {
     background: transparent;
 }
 
-/* 数独格子 */
 .cell {
     width: 40px;
     height: 40px;
@@ -166,7 +79,6 @@ h1 {
     border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-/* 格子悬停效果 */
 .cell:not(.filled):hover::after {
     content: attr(data-current-number);
     position: absolute;
@@ -175,7 +87,7 @@ h1 {
 }
 
 /* ================== */
-/* === 控制按钮区 === */
+/* === 数字按钮区 === */
 /* ================== */
 .button-container {
     display: flex;
@@ -187,14 +99,12 @@ h1 {
     background: transparent;
 }
 
-/* 数字按钮行 */
 .number-row {
     display: flex;
     gap: 12px;
     justify-content: center;
 }
 
-/* 基础数字按钮样式 */
 .number-button {
     width: 42px;
     height: 42px;
@@ -216,20 +126,17 @@ h1 {
     top: 0;
 }
 
-/* 数字按钮悬停状态 */
 .number-button:hover {
     background: rgba(252, 252, 252, 0.25);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* 数字按钮按下状态 */
 .number-button:active {
     transform: translateY(2px);
     box-shadow: none;
 }
 
-/* 数字按钮选中状态 */
 .number-button.selected {
     color: rgba(0, 0, 0, 0.8) !important;
     background: rgba(255, 255, 255, 0.8);
@@ -259,14 +166,12 @@ h1 {
     opacity: 0.7;
 }
 
-/* 选中按钮悬停效果 */
 .number-button.selected:hover {
     transform: scale(1.1) translateY(-2px);
     box-shadow: 0 0 12px 4px rgba(255, 215, 0, 0.7),
     0 0 24px 8px rgba(255, 255, 150, 0.5) !important;
 }
 
-/* 重开按钮特殊样式 */
 .number-button.restart-button {
     background: rgba(255, 165, 0, 0.3);
     border-color: rgba(255, 165, 0, 0.6);
@@ -276,14 +181,12 @@ h1 {
     background: rgba(255, 165, 0, 0.4);
 }
 
-/* 禁用状态 */
 .number-button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none !important;
 }
 
-/* 点击涟漪效果 */
 .number-button::after {
     content: '';
     position: absolute;
@@ -304,52 +207,92 @@ h1 {
 }
 
 /* ================== */
+/* === 侧边栏样式 === */
+/* ================== */
+.sidebar {
+    width: 200px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transition: all 0.1s ease;
+    z-index: 100;
+    background-color: rgba(1, 1, 1, 0.6);
+}
+
+.sidebar-content {
+    width: 100%;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: rgba(252, 252, 252, 0.8);
+    padding: 5px 0;
+    border-bottom: 2px solid #b8b8b8;
+    margin-bottom: 10px;
+}
+
+.collapse-handle {
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px 10px;
+    margin-right: -10px;
+    position: relative;
+}
+
+.collapse-handle::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    bottom: -10px;
+    left: -10px;
+    right: -10px;
+}
+
+body.sidebar-collapsed .sidebar {
+    transform: translateX(-100%);
+}
+
+.expand-button {
+    background-color: transparent;
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 90;
+    opacity: 0;
+    pointer-events: none;
+}
+
+body.sidebar-collapsed .expand-button {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ================== */
 /* === 侧边栏控件 === */
 /* ================== */
-.dropdown {
-    position: relative;
-    width: 100%;
-}
-
-/* 下拉菜单 */
-#difficulty-menu,
-#background-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: rgba(255, 255, 255, 0.4);
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    width: 99%;
-    z-index: 100;
-    flex-direction: column;
-}
-
-/* 下拉菜单项 */
-#difficulty-menu div,
-#background-menu div {
-    background-color: rgba(252, 252, 252, 0.5);
-    padding: 6px 20px;
-    cursor: pointer;
-    text-align: left;
-    font-size: 12px;
-    color: black;
-    font-weight: bold;
-}
-
-#difficulty-menu div:hover,
-#background-menu div:hover {
-    background-color: rgba(252, 252, 252, 0.8);
-}
-
-/* 侧边栏按钮容器 */
 .sidebar-button {
     width: 100%;
     margin-bottom: 16px;
 }
 
-/* 基础按钮样式 */
 .button {
     width: 100%;
     padding: 6px;
@@ -372,7 +315,41 @@ h1 {
     box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2) !important;
 }
 
-/* 难度输入框 */
+.dropdown {
+    position: relative;
+    width: 100%;
+}
+
+#difficulty-menu,
+#background-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    width: 99%;
+    z-index: 100;
+    flex-direction: column;
+}
+
+#difficulty-menu div,
+#background-menu div {
+    background-color: rgba(252, 252, 252, 0.5);
+    padding: 6px 20px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 12px;
+    color: black;
+    font-weight: bold;
+}
+
+#difficulty-menu div:hover,
+#background-menu div:hover {
+    background-color: rgba(252, 252, 252, 0.8);
+}
+
 #empty-cells-input {
     width: 100%;
     margin-bottom: 5px;
@@ -392,7 +369,6 @@ h1 {
     background: rgba(252, 252, 252, 0.25);
 }
 
-/* 信息框 */
 .info-box {
     background-color: rgba(1,1,1,0.2);
     color: rgba(255,255,255,0.8);
