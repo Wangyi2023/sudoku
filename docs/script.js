@@ -213,8 +213,8 @@ function create_board() {
     const board_element = document.getElementById("board");
     board_element.innerHTML = "";
 
-    board_element.style.gridTemplateRows = "repeat(9, 36px)";
-    board_element.style.gridTemplateColumns = "repeat(9, 36px)";
+    board_element.style.gridTemplateRows = "repeat(9, 40px)";
+    board_element.style.gridTemplateColumns = "repeat(9, 40px)";
 
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
