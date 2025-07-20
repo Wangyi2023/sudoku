@@ -14,8 +14,12 @@ function start_game() {
     start_time = Date.now();
     currentNumber = 0;
 
-    const targetEmptyCells = parseInt(document.getElementById('empty-cells-input').value) || 45;
-    const safeEmptyCells = Math.min(Math.max(targetEmptyCells, 0), 55);
+    const inputElement = document.getElementById('empty-cells-input');
+    let targetEmptyCells = parseInt(document.getElementById('empty-cells-input').value) || DEFAULT_EMPTY_CELLS;
+    if (isNaN(targetEmptyCells) || targetEmptyCells < 1 || targetEmptyCells > 55) {
+        targetEmptyCells = DEFAULT_EMPTY_CELLS;
+        inputElement.value = DEFAULT_EMPTY_CELLS;
+    }
 
     document.querySelectorAll('.number-button').forEach(btn => {
         btn.classList.remove('game-over', 'completed-number', 'selected');
@@ -32,7 +36,7 @@ function start_game() {
     );
 
     timer_interval = setInterval(update_timer, 100);
-    create_game_field(safeEmptyCells);
+    create_game_field(targetEmptyCells);
     create_board();
     render_board_colors();
     update_number_completion();
@@ -308,18 +312,12 @@ function apply_difficulty() {
     let empty_cells_input = document.getElementById('empty-cells-input');
     let empty_cells = parseInt(empty_cells_input.value);
 
-    if (isNaN(empty_cells)) {
-        empty_cells_input.placeholder = "Please enter a number";
-        empty_cells_input.value = '';
-        empty_cells_input.focus();
-        return;
+    if (isNaN(empty_cells) || empty_cells < 1 || empty_cells > 55) {
+        empty_cells = DEFAULT_EMPTY_CELLS;
+        empty_cells_input.value = DEFAULT_EMPTY_CELLS;
     }
 
-    empty_cells = Math.max(1, Math.min(55, empty_cells));
-    empty_cells_input.value = empty_cells;
-
     document.getElementById('difficulty-input-container').style.display = 'none';
-
     start_game();
 }
 
