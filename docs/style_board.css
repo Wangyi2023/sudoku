@@ -1,11 +1,14 @@
-/* ================ */
-/* === 数独棋盘 === */
-/* ================ */
+/* ================== */
+/* === 棋盘基础样式 === */
+/* ================== */
 #board {
     display: grid;
     background: transparent;
 }
 
+/* ================== */
+/* === 单元格样式 === */
+/* ================== */
 .cell {
     width: 40px;
     height: 40px;
@@ -22,6 +25,17 @@
     border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
+.cell.locked {
+    color: white !important;
+    font-weight: bold;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    cursor: default;
+}
+
+.cell:not(.locked) {
+    cursor: pointer;
+}
+
 .cell:not(.filled):hover::after {
     content: attr(data-current-number);
     position: absolute;
@@ -29,23 +43,13 @@
     font-size: 20px;
 }
 
-/* 锁定数字的样式 */
-.cell.locked {
-    color: white !important; /* 锁定数字为白色 */
-    font-weight: bold;
-    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
-    cursor: default;
-}
-
 .cell.locked:hover {
     transform: none !important;
 }
 
-.cell:not(.locked) {
-    cursor: pointer;
-}
-
-/* 统一的高亮效果 - 所有单元格使用相同淡黄色光效 */
+/* ================== */
+/* === 高亮效果 === */
+/* ================== */
 .cell.highlighted {
     position: relative;
     z-index: 1;
@@ -59,98 +63,23 @@
     left: 0;
     right: 0;
     bottom: 0;
-    border: 2px solid rgba(255, 255, 150, 0.9); /* 淡黄色边框 */
+    border: 2px solid rgba(255, 255, 150, 0.9);
     box-shadow:
             inset 0 0 10px rgba(255, 255, 150, 0.7),
             inset 0 0 30px rgba(255, 255, 180, 0.5);
     animation: pulseGlow 1.5s infinite ease-in-out;
 }
 
-@keyframes pulseGlow {
-    0% {
-        opacity: 0.5;
-        box-shadow:
-                inset 0 0 5px rgba(255, 255, 150, 0.5),
-                inset 0 0 15px rgba(255, 255, 180, 0.3);
-        transform: scale(0.98);
-    }
-    50% {
-        opacity: 1;
-        box-shadow:
-                inset 0 0 15px rgba(255, 255, 150, 0.9),
-                inset 0 0 40px rgba(255, 255, 200, 0.7);
-        transform: scale(1.02);
-    }
-    100% {
-        opacity: 0.5;
-        box-shadow:
-                inset 0 0 5px rgba(255, 255, 150, 0.5),
-                inset 0 0 15px rgba(255, 255, 180, 0.3);
-        transform: scale(0.98);
-    }
-}
-
-
-/* 冲突方格的闪烁效果 - 更醒目 */
-@keyframes flashRed {
-    0%, 100% {
-        background-color: rgba(255, 0, 0, 0);
-        border-color: rgba(255, 255, 255, 0.5); /* 默认边框颜色 */
-    }
-    50% {
-        background-color: rgba(255, 0, 0, 0.9); /* 更红的背景 */
-        border-color: rgba(255, 50, 50, 0.9); /* 红色边框 */
-        box-shadow:
-                inset 0 0 15px rgba(255, 0, 0, 0.7),
-                0 0 15px rgba(255, 0, 0, 0.7); /* 内外发光 */
-    }
-}
-
+/* ================== */
+/* === 冲突效果 === */
+/* ================== */
 .cell.conflict {
-    animation: flashRed 0.3s 2 !important; /* 更快闪烁，优先级最高 */
-    z-index: 10 !important; /* 确保覆盖其他效果 */
+    animation: flashRed 0.3s 2 !important;
+    z-index: 10 !important;
 }
 
-/* 确保冲突状态覆盖高亮状态 */
 .cell.conflict.highlighted::after {
     display: none !important;
-}
-
-
-
-
-
-
-/* 游戏结束时的重开按钮效果 */
-.number-button.restart-button.game-over {
-    animation: pulseGlow 1.5s infinite ease-in-out;
-    background: rgba(255, 0, 0, 0.5);
-    box-shadow:
-            0 0 10px 3px rgba(255, 0, 0, 0.6),
-            0 0 20px 6px rgba(255, 100, 100, 0.4);
-    border-color: rgba(255, 255, 255, 0.9);
-}
-
-.number-button.restart-button.game-over:hover {
-    animation: pulseGlowFast 1s infinite ease-in-out;
-    box-shadow:
-            0 0 15px 5px rgba(255, 0, 0, 0.8),
-            0 0 30px 10px rgba(255, 150, 150, 0.6);
-}
-
-@keyframes pulseGlowFast {
-    0%, 100% {
-        transform: scale(0.98);
-        box-shadow:
-                0 0 10px 3px rgba(255, 0, 0, 0.6),
-                0 0 20px 6px rgba(255, 100, 100, 0.4);
-    }
-    50% {
-        transform: scale(1.05);
-        box-shadow:
-                0 0 15px 5px rgba(255, 0, 0, 0.8),
-                0 0 30px 10px rgba(255, 150, 150, 0.6);
-    }
 }
 
 /* ================== */
@@ -209,8 +138,9 @@
     background: rgba(255, 255, 255, 0.8);
     border-color: rgba(255, 255, 150, 0.8) !important;
     text-shadow: none !important;
-    box-shadow: 0 0 10px 3px rgba(255, 215, 0, 0.6),
-    0 0 20px 6px rgba(255, 255, 150, 0.4);
+    box-shadow:
+            0 0 10px 3px rgba(255, 215, 0, 0.6),
+            0 0 20px 6px rgba(255, 255, 150, 0.4);
     position: relative;
     z-index: 1;
 }
@@ -235,10 +165,14 @@
 
 .number-button.selected:hover {
     transform: scale(1.1) translateY(-2px);
-    box-shadow: 0 0 12px 4px rgba(255, 215, 0, 0.7),
-    0 0 24px 8px rgba(255, 255, 150, 0.5) !important;
+    box-shadow:
+            0 0 12px 4px rgba(255, 215, 0, 0.7),
+            0 0 24px 8px rgba(255, 255, 150, 0.5) !important;
 }
 
+/* ================== */
+/* === 重开按钮 === */
+/* ================== */
 .number-button.restart-button {
     background: rgba(255, 0, 0, 0.3);
     border-color: rgba(255, 0, 0, 0.6);
@@ -250,33 +184,25 @@
     box-shadow: 0 0 8px rgba(255, 0, 0, 0.6);
 }
 
-.number-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none !important;
+.number-button.restart-button.game-over {
+    animation: pulseGlow 1.5s infinite ease-in-out;
+    background: rgba(255, 0, 0, 0.5);
+    box-shadow:
+            0 0 10px 3px rgba(255, 0, 0, 0.6),
+            0 0 20px 6px rgba(255, 100, 100, 0.4);
+    border-color: rgba(255, 255, 255, 0.9);
 }
 
-.number-button::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: radial-gradient(circle, rgba(255,255,255,0.8) 1%, transparent 1%) no-repeat 50%;
-    transform: scale(0);
-    opacity: 0;
-    transition: transform 0.3s, opacity 0.6s;
+.number-button.restart-button.game-over:hover {
+    animation: pulseGlowFast 1s infinite ease-in-out;
+    box-shadow:
+            0 0 15px 5px rgba(255, 0, 0, 0.8),
+            0 0 30px 10px rgba(255, 150, 150, 0.6);
 }
 
-.number-button:active::after {
-    transform: scale(1);
-    opacity: 0.3;
-    transition: 0s;
-}
-
-/* 数字按钮的满9个光效（边框内发光） */
-/* 数字按钮的满9个光效（静态文字背后发光） */
+/* ================== */
+/* === 完成数字效果 === */
+/* ================== */
 .number-button.completed-number {
     position: relative;
     color: rgba(150, 255, 150, 0.9);
@@ -295,7 +221,6 @@
     background: rgba(0, 0, 0, 0.3);
 }
 
-/* 确保选中状态覆盖 completed-number 的样式 */
 .number-button.completed-number.selected {
     color: rgba(0, 0, 0, 0.8) !important;
     background: rgba(255, 255, 255, 0.8) !important;
@@ -314,7 +239,7 @@
 }
 
 /* ================== */
-/* === 动画效果 === */
+/* === 动画定义 === */
 /* ================== */
 @keyframes pulseGlow {
     0%, 100% {
@@ -327,9 +252,37 @@
     }
 }
 
-@keyframes buttonRipple {
-    to {
-        transform: scale(4);
-        opacity: 0;
+@keyframes pulseGlowFast {
+    0%, 100% {
+        transform: scale(0.98);
+        box-shadow:
+                0 0 10px 3px rgba(255, 0, 0, 0.6),
+                0 0 20px 6px rgba(255, 100, 100, 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow:
+                0 0 15px 5px rgba(255, 0, 0, 0.8),
+                0 0 30px 10px rgba(255, 150, 150, 0.6);
+    }
+}
+
+
+@keyframes flashRed {
+    0%, 100% {
+        transform: scale(0.98);
+        background-color: rgba(255, 50, 50, 0.3);
+        border-color: rgba(255, 50, 50, 0.8);
+        box-shadow:
+                inset 0 0 5px rgba(255, 0, 0, 0.3),
+                0 0 5px rgba(255, 50, 50, 0.3);
+    }
+    50% {
+        transform: scale(1.02);
+        background-color: rgba(255, 50, 50, 0.7);
+        border-color: rgba(255, 150, 150, 0.9);
+        box-shadow:
+                inset 0 0 15px rgba(255, 0, 0, 0.6),
+                0 0 15px rgba(255, 100, 100, 0.8);
     }
 }

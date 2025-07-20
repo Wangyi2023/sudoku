@@ -25,11 +25,16 @@ function start_game() {
 
     // 获取难度设置
     const targetEmptyCells = parseInt(document.getElementById('empty-cells-input').value) || 45;
-    const safeEmptyCells = Math.min(Math.max(targetEmptyCells, 0), 64);
+    const safeEmptyCells = Math.min(Math.max(targetEmptyCells, 0), 55);
 
     // 重置UI状态
     document.querySelectorAll('.number-button').forEach(btn => {
         btn.classList.remove('game-over', 'completed-number', 'selected');
+    });
+
+    // 移除所有闪光效果
+    document.querySelectorAll('.cell.solved-hint, .cell.conflict').forEach(cell => {
+        cell.classList.remove('solved-hint', 'conflict');
     });
 
     // 正确初始化棋盘
@@ -72,7 +77,7 @@ function generate_sudoku(targetEmptyCells = DEFAULT_EMPTY_CELLS) {
 
     // 2. 挖空单元格
     let emptyCount = 0;
-    const safeEmptyCells = Math.min(Math.max(targetEmptyCells, 0), 64);
+    const safeEmptyCells = Math.min(Math.max(targetEmptyCells, 0), 55);
 
     let attempts = 0;
     const MAX_ATTEMPTS = 1000;
@@ -374,17 +379,43 @@ function select_cell(row, col) {
 /**
  * 应用难度设置
  */
+/**
+ * Shows the difficulty input field
+ */
+function showDifficultyInput() {
+    const container = document.getElementById('difficulty-input-container');
+    const input = document.getElementById('empty-cells-input');
+
+    container.style.display = container.style.display === 'flex' ? 'none' : 'flex';
+
+    if (container.style.display === 'flex') {
+        input.focus();
+        input.value = ''; // Clear the input when showing
+    }
+}
+
+/**
+ * Applies difficulty settings
+ */
 function apply_difficulty() {
     let emptyCellsInput = document.getElementById('empty-cells-input');
-    // 确保传入的是字符串类型
-    let emptyCells = parseInt(emptyCellsInput.value.toString());
+    let emptyCells = parseInt(emptyCellsInput.value);
 
-    // 检查输入是否合法
-    if (isNaN(emptyCells) || emptyCells < 1 || emptyCells > 64) {
-        emptyCells = DEFAULT_EMPTY_CELLS;
+    // Check if input is valid
+    if (isNaN(emptyCells)) {
+        emptyCellsInput.placeholder = "Please enter a number";
+        emptyCellsInput.value = '';
+        emptyCellsInput.focus();
+        return;
     }
 
+    // Clamp value between 1 and 55
+    emptyCells = Math.max(1, Math.min(55, emptyCells));
     emptyCellsInput.value = emptyCells;
+
+    // Hide the input container
+    document.getElementById('difficulty-input-container').style.display = 'none';
+
     start_game();
 }
 
@@ -585,12 +616,6 @@ function update_game_information() {
 // === 侧边栏功能 ===
 // ======================
 
-/**
- * 解决数独（提示功能）
- */
-function solve() {
-    console.log("Solve function will be implemented for Sudoku hints");
-}
 
 /**
  * 选择背景
@@ -625,6 +650,7 @@ function updateNumberCompletion() {
         }
     });
 }
+
 
 // ======================
 // === 初始化 ===

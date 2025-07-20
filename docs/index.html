@@ -38,18 +38,18 @@
             </div>
 
             <div class="sidebar-button">
-                <label for="empty-cells-input" class="sr-only">Empty cells count</label>
-                <input
-                        type="number"
-                        id="empty-cells-input"
-                        min="1"
-                        max="64"
-                        value="45"
-                        class="button"
-                        style="text-align: center;"
-                        placeholder="Empty cells (1-64)"
-                >
-                <button class="button" onclick="apply_difficulty()">Apply Difficulty</button>
+                <button class="button" onclick="showDifficultyInput()">Change Difficulty</button>
+                <div id="difficulty-input-container" class="difficulty-input-container" style="display: none;">
+                    <input
+                            type="number"
+                            id="empty-cells-input"
+                            min="1"
+                            max="55"
+                            placeholder="Enter 1-55"
+                            onkeydown="if(event.key === 'Enter') apply_difficulty()"
+                    >
+                    <button class="confirm-button" onclick="apply_difficulty()">Confirm</button>
+                </div>
             </div>
 
             <!-- 删除Solve All按钮部分： -->
@@ -68,10 +68,6 @@
                     <div onclick="select_background('04.jpg')">04</div>
                     <div onclick="select_background('05.jpg')">05</div>
                 </div>
-            </div>
-
-            <div class="sidebar-button">
-                <button class="button" onclick="solve()">Solve</button>
             </div>
 
             <div class="sidebar-button">
@@ -137,9 +133,6 @@
         document.getElementById('difficulty-menu').style.display = 'none';
     }
 
-
-
-
     function toggle_guide() {
         document.getElementById('guide-modal').style.display = 'block';
     }
@@ -163,6 +156,8 @@
         }
     });
 </script>
+
+
 <div id="guide-modal" class="modal" onclick="close_guide(event)">
     <div class="modal-content">
         <span class="close-button" onclick="hide_guide()">&times;</span>
@@ -171,13 +166,12 @@
                 <h2>游戏说明</h2>
                 <p>
                     欢迎来到数独 :D<br><br>
-                    玩家可点击棋盘上的空格子，然后选择数字按钮填入数字。<br>
+                    玩家需要先选择数字，再选择数字填入的位置。 此游戏没有标记功能。<br>
+                    此游戏创建的棋盘必定有唯一解，为确保创建棋盘耗时不会太久，我设置空格上限为55。<br>
+                    玩家可以通过点击棋盘下方的数字按钮，或点击棋盘上已有的数字选择数字。已经填入的数字可以再次点击将其清除。<br>
                     控制面板和信息面板位于侧边栏中，玩家可以打开和收起。<br>
                     玩家可通过侧边栏的按钮完成游戏的 重设， 修改难度（空格数量），以及修改背景。<br>
-                    经典数独规则：每行、每列和每个3×3宫格内都必须包含1-9的数字，且不能重复。<br>
-                    在有确定解的情况下，点击 Solve 按钮可以获得提示，点击 Restart 可以重新开始游戏。<br>
                     游戏会自动检测完成状态，当所有格子正确填满时，游戏即告完成。<br>
-                    通过调整侧边栏的"Empty Cells"数值，可以改变游戏难度（数值越大难度越高）。<br>
                 </p>
             </div>
 
@@ -185,13 +179,12 @@
                 <h2>Game Guide</h2>
                 <p>
                     Welcome to Sudoku :D<br><br>
-                    Click on empty cells and select number buttons to fill in numbers.<br>
-                    The control panel and information panel are located in the sidebar, which you can expand or collapse.<br>
-                    Use the buttons in the sidebar to restart the game, change difficulty (number of empty cells), or switch backgrounds.<br>
-                    Classic Sudoku rules: Each row, column, and 3×3 box must contain digits 1-9 without repetition.<br>
-                    When a solution exists, clicking "Solve" will provide a hint. Click "Restart" to start a new game.<br>
-                    The game automatically checks completion - when all cells are correctly filled, the game is completed.<br>
-                    Adjust the "Empty Cells" value in the sidebar to change difficulty (higher numbers mean more challenging).<br>
+                    To play, first select a number, then select the cell where you want to place it. This game does not support pencil marks.<br>
+                    Every generated Sudoku board has a unique solution. To avoid long generation times, the maximum number of empty cells is set to 55.<br>
+                    You can select numbers by clicking the number buttons below the board, or by clicking on existing numbers on the board. You can clear a filled cell by clicking it again.<br>
+                    The control panel and information panel are located in the sidebar, which you can open or collapse.<br>
+                    From the sidebar, you can restart the game, change the difficulty (number of empty cells), and change the background.<br>
+                    The game will automatically detect when you have completed the board correctly. When all cells are filled in correctly, the game is complete.<br>
                 </p>
             </div>
         </div>

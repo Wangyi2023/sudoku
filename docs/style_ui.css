@@ -325,3 +325,54 @@ body.sidebar-collapsed .expand-button {
      white-space: nowrap;
      border-width: 0;
  }
+
+/* ================== */
+/* === Difficulty Input Container === */
+/* ================== */
+.difficulty-input-container {
+    display: flex;
+    gap: 0; /* 移除间隙，使按钮紧贴输入框 */
+    margin-top: 5px;
+    width: 100%;
+}
+
+/* 输入框样式 */
+.difficulty-input-container input {
+    flex: 1;
+    height: 30px; /* 与其他按钮高度一致 */
+    background: #ffffff !important; /* 强制白色背景 */
+    color: #000000; /* 黑色文字 */
+    border: 1px solid #ccc;
+    padding: 0 10px;
+    font-size: 12px;
+    font-weight: bold;
+    box-sizing: border-box;
+    outline: none;
+}
+
+/* 确认按钮样式 */
+.difficulty-input-container .confirm-button {
+    width: 70px; /* 固定宽度 */
+    height: 30px; /* 与输入框高度一致 */
+    background: #ffffff !important; /* 强制白色背景 */
+    color: #000000; /* 黑色文字 */
+    border: 1px solid #ccc;
+    border-left: none; /* 移除左侧边框，避免双边框 */
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+/* 按钮悬停效果 */
+.difficulty-input-container .confirm-button:hover {
+    background: #f0f0f0 !important;
+}
+
+/* 确保输入框和按钮不受其他样式影响 */
+#difficulty-input-container input,
+#difficulty-input-container .confirm-button {
+    background: #ffffff !important;
+    border-color: #ccc !important;
+    color: #000000 !important;
+}
