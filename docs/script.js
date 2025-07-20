@@ -453,6 +453,10 @@ function check_completion() {
         clearInterval(timer_interval);
         document.getElementById("status-info").textContent = "Completed";
 
+        currentNumber = 0;
+        update_number_buttons_selection();
+        update_highlight();
+
         const restart_button = document.getElementById('restart-btn');
         restart_button.classList.add('game-over');
     }
@@ -461,8 +465,6 @@ function check_completion() {
 function update_game_information() {
     const emptyCells = board.flat().filter(cell => cell.value === 0).length;
     document.getElementById('difficulty-info').textContent = emptyCells.toString();
-    // 或者使用模板字符串：
-    // document.getElementById('difficulty-info').textContent = `${emptyCells}`;
 }
 
 function select_background(filename) {
@@ -472,7 +474,6 @@ function select_background(filename) {
 }
 
 function update_number_completion() {
-    // 统计每个数字出现的次数
     const numberCounts = Array(10).fill(0);
     board.forEach(row => {
         row.forEach(cell => {
@@ -486,6 +487,11 @@ function update_number_completion() {
         const num = parseInt(button.dataset.number);
         if (numberCounts[num] >= 9) {
             button.classList.add('completed-number');
+            if (num === currentNumber) {
+                currentNumber = 0;
+                update_number_buttons_selection();
+                update_highlight();
+            }
         } else {
             button.classList.remove('completed-number');
         }
