@@ -413,7 +413,7 @@ function update_highlight() {
     }
 }
 
-// Todo 3 - init
+// Todo 3 - Init / Update Information
 function init_number_buttons() {
     document.querySelectorAll('.number-button:not(.restart-button)').forEach(button => {
         button.addEventListener('click', function() {

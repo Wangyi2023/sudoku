@@ -269,7 +269,6 @@
     }
 }
 
-
 @keyframes flashRed {
     0%, 100% {
         transform: scale(0.98);
