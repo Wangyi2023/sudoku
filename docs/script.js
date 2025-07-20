@@ -213,8 +213,8 @@ function create_board() {
     const board_element = document.getElementById("board");
     board_element.innerHTML = "";
 
-    board_element.style.gridTemplateRows = "repeat(9, 40px)";
-    board_element.style.gridTemplateColumns = "repeat(9, 40px)";
+    board_element.style.gridTemplateRows = "repeat(9, 36px)";
+    board_element.style.gridTemplateColumns = "repeat(9, 36px)";
 
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
@@ -487,11 +487,6 @@ function update_number_completion() {
         const num = parseInt(button.dataset.number);
         if (numberCounts[num] >= 9) {
             button.classList.add('completed-number');
-            if (num === currentNumber) {
-                currentNumber = 0;
-                update_number_buttons_selection();
-                update_highlight();
-            }
         } else {
             button.classList.remove('completed-number');
         }
