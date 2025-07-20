@@ -1,6 +1,3 @@
-/* ========================== */
-/* === 全局变量和基础样式 === */
-/* ========================== */
 :root {
     --background-url: url("Background_Collection/background_default.jpg");
 }
@@ -30,9 +27,6 @@ body::before {
     pointer-events: none;
 }
 
-/* ================== */
-/* === 主内容区域 === */
-/* ================== */
 .main-content {
     padding: 15px 20px;
     min-height: 100vh;
@@ -55,9 +49,7 @@ h1 {
     font-size: 28px;
 }
 
-/* ================== */
-/* === 侧边栏样式 === */
-/* ================== */
+/* Todo 1 - Sidebar */
 .sidebar {
     width: 200px;
     height: 100vh;
@@ -134,9 +126,6 @@ body.sidebar-collapsed .expand-button {
     pointer-events: auto;
 }
 
-/* ================== */
-/* === 侧边栏控件 === */
-/* ================== */
 .sidebar-button {
     width: 100%;
     margin-bottom: 16px;
@@ -255,9 +244,52 @@ body.sidebar-collapsed .expand-button {
     text-align: left;
 }
 
-/* ================ */
-/* === 模态窗口 === */
-/* ================ */
+.difficulty-input-container {
+    display: flex;
+    gap: 0;
+    margin-top: 5px;
+    width: 100%;
+}
+
+.difficulty-input-container input {
+    flex: 1;
+    height: 30px;
+    background: #ffffff !important;
+    color: #000000;
+    border: 1px solid #ccc;
+    padding: 0 10px;
+    font-size: 12px;
+    font-weight: bold;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.difficulty-input-container .confirm-button {
+    width: 70px;
+    height: 30px;
+    background: #ffffff !important;
+    color: #000000;
+    border: 1px solid #ccc;
+    border-left: none;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.difficulty-input-container .confirm-button:hover {
+    background: #f0f0f0 !important;
+}
+
+#difficulty-input-container input,
+#difficulty-input-container .confirm-button {
+    background: #ffffff !important;
+    border-color: #ccc !important;
+    color: #000000 !important;
+}
+
+
+/* Todo 2 - Modal (Game Guide) */
 .modal {
     display: none;
     position: fixed;
@@ -296,9 +328,6 @@ body.sidebar-collapsed .expand-button {
     color: #000;
 }
 
-/* ================== */
-/* === 响应式设计 === */
-/* ================== */
 @media (max-width: 600px) {
     .button-container {
         gap: 8px;
@@ -325,54 +354,3 @@ body.sidebar-collapsed .expand-button {
      white-space: nowrap;
      border-width: 0;
  }
-
-/* ================== */
-/* === Difficulty Input Container === */
-/* ================== */
-.difficulty-input-container {
-    display: flex;
-    gap: 0; /* 移除间隙，使按钮紧贴输入框 */
-    margin-top: 5px;
-    width: 100%;
-}
-
-/* 输入框样式 */
-.difficulty-input-container input {
-    flex: 1;
-    height: 30px; /* 与其他按钮高度一致 */
-    background: #ffffff !important; /* 强制白色背景 */
-    color: #000000; /* 黑色文字 */
-    border: 1px solid #ccc;
-    padding: 0 10px;
-    font-size: 12px;
-    font-weight: bold;
-    box-sizing: border-box;
-    outline: none;
-}
-
-/* 确认按钮样式 */
-.difficulty-input-container .confirm-button {
-    width: 70px; /* 固定宽度 */
-    height: 30px; /* 与输入框高度一致 */
-    background: #ffffff !important; /* 强制白色背景 */
-    color: #000000; /* 黑色文字 */
-    border: 1px solid #ccc;
-    border-left: none; /* 移除左侧边框，避免双边框 */
-    font-size: 12px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-/* 按钮悬停效果 */
-.difficulty-input-container .confirm-button:hover {
-    background: #f0f0f0 !important;
-}
-
-/* 确保输入框和按钮不受其他样式影响 */
-#difficulty-input-container input,
-#difficulty-input-container .confirm-button {
-    background: #ffffff !important;
-    border-color: #ccc !important;
-    color: #000000 !important;
-}

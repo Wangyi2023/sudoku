@@ -1,43 +1,29 @@
-// ======================
-// === 游戏全局变量 ===
-// ======================
-let game_over = false;        // 游戏是否结束
-let start_time = null;        // 游戏开始时间
-let timer_interval = null;    // 计时器ID
-let board = [];               // 数独棋盘数据
-let currentNumber = 0;        // 当前选中的数字
+let game_over = false;
+let start_time = null;
+let timer_interval = null;
 
-const DEFAULT_EMPTY_CELLS = 45; // 默认空格数量
+let board = [];
+let currentNumber = 0;
 
-// ======================
-// === 游戏核心功能 ===
-// ======================
+const DEFAULT_EMPTY_CELLS = 45;
 
-/**
- * 初始化游戏
- */
+// Todo 1 - Start / Restart
 function start_game() {
-    // 重置游戏状态
     game_over = false;
     clearInterval(timer_interval);
     start_time = Date.now();
     currentNumber = 0;
 
-    // 获取难度设置
     const targetEmptyCells = parseInt(document.getElementById('empty-cells-input').value) || 45;
     const safeEmptyCells = Math.min(Math.max(targetEmptyCells, 0), 55);
 
-    // 重置UI状态
     document.querySelectorAll('.number-button').forEach(btn => {
         btn.classList.remove('game-over', 'completed-number', 'selected');
     });
-
-    // 移除所有闪光效果
     document.querySelectorAll('.cell.solved-hint, .cell.conflict').forEach(cell => {
         cell.classList.remove('solved-hint', 'conflict');
     });
 
-    // 正确初始化棋盘
     board = Array(9).fill(null).map(() =>
         Array(9).fill(null).map(() => ({
             value: 0,
@@ -45,21 +31,16 @@ function start_game() {
         }))
     );
 
-    // 开始游戏
     timer_interval = setInterval(update_timer, 100);
-    generate_sudoku(safeEmptyCells);
+    create_game_field(safeEmptyCells);
     create_board();
-    renderBoardColors();
-    updateNumberCompletion();
+    render_board_colors();
+    update_number_completion();
 
-    // 更新游戏信息
     document.getElementById("status-info").textContent = "In Progress";
     update_game_information();
 }
 
-/**
- * 更新计时器显示
- */
 function update_timer() {
     if (start_time) {
         const elapsed = (Date.now() - start_time) / 1000;
@@ -67,22 +48,16 @@ function update_timer() {
     }
 }
 
-/**
- * 生成数独谜题
- * @param {number} targetEmptyCells - 目标空格数量
- */
-function generate_sudoku(targetEmptyCells = DEFAULT_EMPTY_CELLS) {
-    // 1. 生成完整解
+function create_game_field(targetEmptyCells = DEFAULT_EMPTY_CELLS) {
     solve_sudoku(board);
 
-    // 2. 挖空单元格
-    let emptyCount = 0;
-    const safeEmptyCells = Math.min(Math.max(targetEmptyCells, 0), 55);
+    let counter = 0;
+    const safe_empty_cells = Math.min(Math.max(targetEmptyCells, 0), 55);
 
     let attempts = 0;
     const MAX_ATTEMPTS = 1000;
 
-    while (emptyCount < safeEmptyCells && attempts++ < MAX_ATTEMPTS) {
+    while (counter < safe_empty_cells && attempts++ < MAX_ATTEMPTS) {
         const row = Math.floor(Math.random() * 9);
         const col = Math.floor(Math.random() * 9);
 
@@ -90,17 +65,15 @@ function generate_sudoku(targetEmptyCells = DEFAULT_EMPTY_CELLS) {
             const temp = board[row][col].value;
             board[row][col].value = 0;
 
-            // 检查唯一解
-            const tempBoard = JSON.parse(JSON.stringify(board));
-            if (count_solutions(tempBoard) === 1) {
-                emptyCount++;
+            const board_temp = JSON.parse(JSON.stringify(board));
+            if (count_solutions(board_temp) === 1) {
+                counter++;
             } else {
-                board[row][col].value = temp; // 恢复
+                board[row][col].value = temp;
             }
         }
     }
 
-    // 3. 锁定非空单元格
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
             board[i][j].locked = (board[i][j].value !== 0);
@@ -108,32 +81,21 @@ function generate_sudoku(targetEmptyCells = DEFAULT_EMPTY_CELLS) {
     }
 }
 
-/**
- * 解数独算法
- * @param {Array} board - 数独棋盘
- */
 function solve_sudoku(board) {
-    // 清空棋盘
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
             board[i][j].value = 0;
         }
     }
 
-    // 填充对角线上的3x3方块
     fill_diagonal_boxes();
-
-    // 解剩余的数独
     solve_remaining(0, 3);
 
-    // 辅助函数：填充对角线方块
     function fill_diagonal_boxes() {
         for (let box = 0; box < 9; box += 3) {
             fill_box(box, box);
         }
     }
-
-    // 辅助函数：填充单个3x3方块
     function fill_box(row, col) {
         const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         shuffle_array(nums);
@@ -145,8 +107,6 @@ function solve_sudoku(board) {
             }
         }
     }
-
-    // 辅助函数：解剩余部分
     function solve_remaining(i, j) {
         if (j >= 9 && i < 8) {
             i++;
@@ -178,31 +138,23 @@ function solve_sudoku(board) {
         }
         return false;
     }
-
-    // 辅助函数：检查数字是否安全
     function is_safe(row, col, num) {
         return !used_in_row(row, num) &&
             !used_in_col(col, num) &&
             !used_in_box(row - row % 3, col - col % 3, num);
     }
-
-    // 辅助函数：检查行
     function used_in_row(row, num) {
         for (let col = 0; col < 9; col++) {
             if (board[row][col].value === num) return true;
         }
         return false;
     }
-
-    // 辅助函数：检查列
     function used_in_col(col, num) {
         for (let row = 0; row < 9; row++) {
             if (board[row][col].value === num) return true;
         }
         return false;
     }
-
-    // 辅助函数：检查3x3宫格
     function used_in_box(boxStartRow, boxStartCol, num) {
         for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 3; col++) {
@@ -213,12 +165,6 @@ function solve_sudoku(board) {
     }
 }
 
-/**
- *
- * @param {Array} board - 数独棋盘
- * @param {number} count - 当前解的数量
- * @returns {number} - 解的总数
- */
 function count_solutions(board, count = 0) {
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
@@ -237,35 +183,24 @@ function count_solutions(board, count = 0) {
     return count + 1;
 }
 
-/**
- * 检查数字在指定位置是否有效
- */
 function is_valid(board, row, col, num) {
-    // 检查行
     for (let x = 0; x < 9; x++) {
         if (board[row][x].value === num) return false;
     }
-
-    // 检查列
     for (let x = 0; x < 9; x++) {
         if (board[x][col].value === num) return false;
     }
-
-    // 检查3x3宫格
-    const startRow = row - row % 3;
-    const startCol = col - col % 3;
+    const r = row - row % 3;
+    const c = col - col % 3;
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            if (board[i + startRow][j + startCol].value === num) return false;
+            if (board[i + r][j + c].value === num) return false;
         }
     }
 
     return true;
 }
 
-/**
- * 打乱数组
- */
 function shuffle_array(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -274,13 +209,6 @@ function shuffle_array(array) {
     return array;
 }
 
-// ======================
-// === 棋盘渲染 ===
-// ======================
-
-/**
- * 创建棋盘DOM元素
- */
 function create_board() {
     const board_element = document.getElementById("board");
     board_element.innerHTML = "";
@@ -301,51 +229,41 @@ function create_board() {
     }
 }
 
-/**
- * 渲染棋盘颜色
- */
-function renderBoardColors() {
+function render_board_colors() {
     const boardElement = document.getElementById("board");
     const cells = boardElement.querySelectorAll('.cell');
 
-    const darkColor = 'rgba(1, 1, 1, 0.6)';
-    const lightColor = 'rgba(1, 1, 1, 0.75)';
+    const dark = 'rgba(1, 1, 1, 0.6)';
+    const light = 'rgba(1, 1, 1, 0.75)';
 
     cells.forEach(cell => {
         const row = parseInt(cell.dataset.row);
         const col = parseInt(cell.dataset.col);
         const boxRow = Math.floor(row / 3);
         const boxCol = Math.floor(col / 3);
-        cell.style.backgroundColor = (boxRow + boxCol) % 2 === 0 ? darkColor : lightColor;
+        cell.style.backgroundColor = (boxRow + boxCol) % 2 === 0 ? dark : light;
     });
 }
 
-// ======================
-// === 单元格操作 ===
-// ======================
 
-/**
- * 选择单元格
- */
+// Todo 2 - Edit Game-Field
 function select_cell(row, col) {
     if (game_over) return;
 
     const cell = board[row][col];
 
-    // 处理锁定的单元格
     if (cell.locked) {
         if (currentNumber === cell.value) {
             currentNumber = 0;
         } else {
             currentNumber = cell.value;
         }
-        updateNumberButtonsSelection();
-        updateHighlight();
-        updateNumberCompletion();
+        update_number_buttons_selection();
+        update_highlight();
+        update_number_completion();
         return;
     }
 
-    // 处理已填写的单元格
     if (cell.value !== 0) {
         if (currentNumber === cell.value) {
             cell.value = 0;
@@ -353,36 +271,28 @@ function select_cell(row, col) {
         } else {
             currentNumber = cell.value;
         }
-        updateNumberButtonsSelection();
+        update_number_buttons_selection();
         update_cell_display(row, col);
-        updateHighlight();
-        updateNumberCompletion();
+        update_highlight();
+        update_number_completion();
         return;
     }
 
-    // 处理空白单元格
     if (currentNumber !== 0) {
-        // 检查数字是否有效
         if (!is_valid(board, row, col, currentNumber)) {
-            flashConflictingCells(row, col, currentNumber);
+            flash_conflicting_cells(row, col, currentNumber);
             return;
         }
 
         cell.value = currentNumber;
         update_cell_display(row, col);
         check_completion();
-        updateHighlight();
-        updateNumberCompletion();
+        update_highlight();
+        update_number_completion();
     }
 }
 
-/**
- * 应用难度设置
- */
-/**
- * Shows the difficulty input field
- */
-function showDifficultyInput() {
+function create_input_box() {
     const container = document.getElementById('difficulty-input-container');
     const input = document.getElementById('empty-cells-input');
 
@@ -394,64 +304,47 @@ function showDifficultyInput() {
     }
 }
 
-/**
- * Applies difficulty settings
- */
 function apply_difficulty() {
-    let emptyCellsInput = document.getElementById('empty-cells-input');
-    let emptyCells = parseInt(emptyCellsInput.value);
+    let empty_cells_input = document.getElementById('empty-cells-input');
+    let empty_cells = parseInt(empty_cells_input.value);
 
-    // Check if input is valid
-    if (isNaN(emptyCells)) {
-        emptyCellsInput.placeholder = "Please enter a number";
-        emptyCellsInput.value = '';
-        emptyCellsInput.focus();
+    if (isNaN(empty_cells)) {
+        empty_cells_input.placeholder = "Please enter a number";
+        empty_cells_input.value = '';
+        empty_cells_input.focus();
         return;
     }
 
-    // Clamp value between 1 and 55
-    emptyCells = Math.max(1, Math.min(55, emptyCells));
-    emptyCellsInput.value = emptyCells;
+    empty_cells = Math.max(1, Math.min(55, empty_cells));
+    empty_cells_input.value = empty_cells;
 
-    // Hide the input container
     document.getElementById('difficulty-input-container').style.display = 'none';
 
     start_game();
 }
 
-/**
- * 闪烁冲突单元格
- */
-function flashConflictingCells(row, col, num) {
-    // 移除所有现有的冲突标记
+function flash_conflicting_cells(row, col, num) {
     document.querySelectorAll('.cell.conflict').forEach(cell => {
         cell.classList.remove('conflict');
     });
 
-    // 临时降低其他单元格可见度
     const highlightedCells = document.querySelectorAll('.cell.highlighted');
     highlightedCells.forEach(cell => {
         cell.style.opacity = '0.5';
     });
 
-    // 检查行、列、宫格冲突
     const conflicts = [];
 
-    // 检查行
     for (let c = 0; c < 9; c++) {
         if (board[row][c].value === num) {
             conflicts.push([row, c]);
         }
     }
-
-    // 检查列
     for (let r = 0; r < 9; r++) {
         if (board[r][col].value === num) {
             conflicts.push([r, col]);
         }
     }
-
-    // 检查3x3宫格
     const boxStartRow = row - row % 3;
     const boxStartCol = col - col % 3;
     for (let r = boxStartRow; r < boxStartRow + 3; r++) {
@@ -462,7 +355,6 @@ function flashConflictingCells(row, col, num) {
         }
     }
 
-    // 应用冲突效果
     conflicts.forEach(([r, c]) => {
         const cellElement = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
         cellElement.classList.add('conflict');
@@ -472,7 +364,6 @@ function flashConflictingCells(row, col, num) {
         }, 10);
     });
 
-    // 1秒后恢复
     setTimeout(() => {
         document.querySelectorAll('.cell.conflict').forEach(cell => {
             cell.classList.remove('conflict');
@@ -483,46 +374,34 @@ function flashConflictingCells(row, col, num) {
     }, 600);
 }
 
-/**
- * 更新单元格显示
- */
 function update_cell_display(row, col) {
-    const cellElement = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
-    if (!cellElement) return;
+    const cell_element = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+    if (!cell_element) return;
 
     const cell = board[row][col];
-    cellElement.textContent = cell.value === 0 ? "" : cell.value;
+    cell_element.textContent = cell.value === 0 ? "" : cell.value;
 
-    cellElement.className = "cell";
+    cell_element.className = "cell";
 
     if (cell.value !== 0) {
-        cellElement.classList.add('filled');
+        cell_element.classList.add('filled');
         if (cell.locked) {
-            cellElement.classList.add('locked');
+            cell_element.classList.add('locked');
         }
     }
 
     if (cell.value !== 0 && cell.value === currentNumber) {
-        cellElement.classList.add('selected');
+        cell_element.classList.add('selected');
     } else {
-        cellElement.classList.remove('selected');
+        cell_element.classList.remove('selected');
     }
 }
 
-// ======================
-// === 数字高亮功能 ===
-// ======================
-
-/**
- * 更新高亮显示
- */
-function updateHighlight() {
-    // 移除所有高亮
+function update_highlight() {
     document.querySelectorAll('.cell.highlighted').forEach(cell => {
         cell.classList.remove('highlighted');
     });
 
-    // 高亮当前选中数字的所有单元格
     if (currentNumber !== 0) {
         document.querySelectorAll('.cell.filled').forEach(cell => {
             const row = parseInt(cell.dataset.row);
@@ -534,15 +413,8 @@ function updateHighlight() {
     }
 }
 
-// ======================
-// === 按钮控制 ===
-// ======================
-
-/**
- * 初始化数字按钮
- */
+// Todo 3 - init
 function init_number_buttons() {
-    // 数字按钮事件
     document.querySelectorAll('.number-button:not(.restart-button)').forEach(button => {
         button.addEventListener('click', function() {
             const num = parseInt(this.dataset.number);
@@ -552,24 +424,20 @@ function init_number_buttons() {
                 this.classList.remove('selected');
             } else {
                 currentNumber = num;
-                updateNumberButtonsSelection();
+                update_number_buttons_selection();
             }
 
-            updateHighlight();
+            update_highlight();
         });
     });
 
-    // 重开按钮事件
     const restartBtn = document.getElementById('restart-btn');
     restartBtn.addEventListener('click', function() {
         start_game();
     });
 }
 
-/**
- * 更新数字按钮选中状态
- */
-function updateNumberButtonsSelection() {
+function update_number_buttons_selection() {
     document.querySelectorAll('.number-button').forEach(btn => {
         btn.classList.remove('selected');
         if (parseInt(btn.dataset.number) === currentNumber) {
@@ -578,33 +446,18 @@ function updateNumberButtonsSelection() {
     });
 }
 
-// ======================
-// === 游戏状态检查 ===
-// ======================
-
-/**
- * 检查游戏是否完成
- */
 function check_completion() {
-    const isComplete = board.every(row => row.every(cell => cell.value !== 0));
-    if (isComplete) {
+    const is_complete = board.every(row => row.every(cell => cell.value !== 0));
+    if (is_complete) {
         game_over = true;
         clearInterval(timer_interval);
         document.getElementById("status-info").textContent = "Completed";
 
-        // 添加重开按钮的光效
-        const restartBtn = document.getElementById('restart-btn');
-        restartBtn.classList.add('game-over');
+        const restart_button = document.getElementById('restart-btn');
+        restart_button.classList.add('game-over');
     }
 }
 
-// ======================
-// === 信息面板更新 ===
-// ======================
-
-/**
- * 更新游戏信息
- */
 function update_game_information() {
     const emptyCells = board.flat().filter(cell => cell.value === 0).length;
     document.getElementById('difficulty-info').textContent = emptyCells.toString();
@@ -612,24 +465,13 @@ function update_game_information() {
     // document.getElementById('difficulty-info').textContent = `${emptyCells}`;
 }
 
-// ======================
-// === 侧边栏功能 ===
-// ======================
-
-
-/**
- * 选择背景
- */
 function select_background(filename) {
     document.documentElement.style.setProperty('--background-url', `url("Background_Collection/${filename}")`);
     localStorage.setItem('background', filename);
     document.getElementById('background-menu').style.display = 'none';
 }
 
-/**
- * 更新数字完成状态
- */
-function updateNumberCompletion() {
+function update_number_completion() {
     // 统计每个数字出现的次数
     const numberCounts = Array(10).fill(0);
     board.forEach(row => {
@@ -640,7 +482,6 @@ function updateNumberCompletion() {
         });
     });
 
-    // 更新按钮状态
     document.querySelectorAll('.number-button:not(.restart-button)').forEach(button => {
         const num = parseInt(button.dataset.number);
         if (numberCounts[num] >= 9) {
@@ -652,22 +493,15 @@ function updateNumberCompletion() {
 }
 
 
-// ======================
-// === 初始化 ===
-// ======================
-
 document.addEventListener('DOMContentLoaded', function() {
-    // 恢复侧边栏状态
     const savedCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
     if (savedCollapsed) document.body.classList.add('sidebar-collapsed');
 
-    // 恢复背景设置
     const savedBg = localStorage.getItem('background');
     if (savedBg) {
         document.documentElement.style.setProperty('--background-url', `url("Background_Collection/${savedBg}")`);
     }
 
-    // 初始化游戏
     init_number_buttons();
     start_game();
 });

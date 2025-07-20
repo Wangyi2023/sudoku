@@ -38,7 +38,7 @@
             </div>
 
             <div class="sidebar-button">
-                <button class="button" onclick="showDifficultyInput()">Change Difficulty</button>
+                <button class="button" onclick="create_input_box()">Change Difficulty</button>
                 <div id="difficulty-input-container" class="difficulty-input-container" style="display: none;">
                     <input
                             type="number"
@@ -51,12 +51,6 @@
                     <button class="confirm-button" onclick="apply_difficulty()">Confirm</button>
                 </div>
             </div>
-
-            <!-- 删除Solve All按钮部分： -->
-            <!-- 删除以下代码块 -->
-            <!-- <div class="sidebar-button">
-                <button class="button" onclick="solve_all()">Solve All</button>
-            </div> -->
 
             <div class="sidebar-button dropdown">
                 <button class="button" onclick="toggle_background_dropdown()">Background</button>
@@ -87,7 +81,6 @@
     <div id="board"></div>
 
     <div class="button-container">
-        <!-- 第一行：1-5 -->
         <div class="number-row">
             <button class="number-button" data-number="1">1</button>
             <button class="number-button" data-number="2">2</button>
@@ -96,7 +89,6 @@
             <button class="number-button" data-number="5">5</button>
         </div>
 
-        <!-- 第二行：6-9 + 重开 -->
         <div class="number-row">
             <button class="number-button" data-number="6">6</button>
             <button class="number-button" data-number="7">7</button>
@@ -106,6 +98,7 @@
         </div>
     </div>
 </div>
+
 
 <script src="script.js"></script>
 <script>

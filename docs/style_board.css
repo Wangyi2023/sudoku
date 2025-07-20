@@ -1,14 +1,9 @@
-/* ================== */
-/* === 棋盘基础样式 === */
-/* ================== */
 #board {
     display: grid;
     background: transparent;
 }
 
-/* ================== */
-/* === 单元格样式 === */
-/* ================== */
+/* Todo 3 - Cell */
 .cell {
     width: 40px;
     height: 40px;
@@ -47,9 +42,6 @@
     transform: none !important;
 }
 
-/* ================== */
-/* === 高亮效果 === */
-/* ================== */
 .cell.highlighted {
     position: relative;
     z-index: 1;
@@ -70,9 +62,6 @@
     animation: pulseGlow 1.5s infinite ease-in-out;
 }
 
-/* ================== */
-/* === 冲突效果 === */
-/* ================== */
 .cell.conflict {
     animation: flashRed 0.3s 2 !important;
     z-index: 10 !important;
@@ -82,9 +71,8 @@
     display: none !important;
 }
 
-/* ================== */
-/* === 数字按钮区 === */
-/* ================== */
+
+/* Todo 4 - Number Botton */
 .button-container {
     display: flex;
     flex-direction: column;
@@ -170,9 +158,6 @@
             0 0 24px 8px rgba(255, 255, 150, 0.5) !important;
 }
 
-/* ================== */
-/* === 重开按钮 === */
-/* ================== */
 .number-button.restart-button {
     background: rgba(255, 0, 0, 0.3);
     border-color: rgba(255, 0, 0, 0.6);
@@ -200,9 +185,6 @@
             0 0 30px 10px rgba(255, 150, 150, 0.6);
 }
 
-/* ================== */
-/* === 完成数字效果 === */
-/* ================== */
 .number-button.completed-number {
     position: relative;
     color: rgba(150, 255, 150, 0.9);
@@ -238,9 +220,9 @@
             0 0 24px 8px rgba(255, 255, 150, 0.5) !important;
 }
 
-/* ================== */
-/* === 动画定义 === */
-/* ================== */
+
+
+/* Todo 5 - Frames */
 @keyframes pulseGlow {
     0%, 100% {
         transform: scale(0.95);
