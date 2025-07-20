@@ -147,7 +147,7 @@ body.sidebar-collapsed .expand-button {
     padding: 6px;
     background: rgba(252, 252, 252, 0.15);
     color: rgba(252, 252, 252, 0.9);
-    border: 1.5px solid;
+    border: 1px solid;
     border-color: #f8f8f8 #a8a8a8 #a8a8a8 #f8f8f8;
     cursor: pointer;
     font-size: 12px;
@@ -204,7 +204,7 @@ body.sidebar-collapsed .expand-button {
     margin-bottom: 5px;
     background: rgba(252, 252, 252, 0.15);
     color: rgba(252, 252, 252, 0.9);
-    border: 1.5px solid;
+    border: 1px solid;
     border-color: #f8f8f8 #a8a8a8 #a8a8a8 #f8f8f8;
     font-size: 12px;
     font-weight: bold;
@@ -221,7 +221,7 @@ body.sidebar-collapsed .expand-button {
 .info-box {
     background-color: rgba(1,1,1,0.2);
     color: rgba(255,255,255,0.8);
-    height: 110px;
+    height: 80px;
     width: 100%;
     font-size: 10px;
     line-height: 1.5;
@@ -313,3 +313,15 @@ body.sidebar-collapsed .expand-button {
         border-width: 1px;
     }
 }
+
+ .sr-only {
+     position: absolute;
+     width: 1px;
+     height: 1px;
+     padding: 0;
+     margin: -1px;
+     overflow: hidden;
+     clip: rect(0, 0, 0, 0);
+     white-space: nowrap;
+     border-width: 0;
+ }

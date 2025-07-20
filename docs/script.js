@@ -1,49 +1,60 @@
-// Document Script.js
-// *** Main JS-Code ***
-let game_over = false;
-let start_time = null;
-let timer_interval = null;
-let board = [];
-let currentNumber = 0;
-const DEFAULT_EMPTY_CELLS = 30;
+// ======================
+// === 游戏全局变量 ===
+// ======================
+let game_over = false;        // 游戏是否结束
+let start_time = null;        // 游戏开始时间
+let timer_interval = null;    // 计时器ID
+let board = [];               // 数独棋盘数据
+let currentNumber = 0;        // 当前选中的数字
+
+const DEFAULT_EMPTY_CELLS = 45; // 默认空格数量
 
 // ======================
 // === 游戏核心功能 ===
 // ======================
 
-// 初始化游戏
+/**
+ * 初始化游戏
+ */
 function start_game() {
+    // 重置游戏状态
     game_over = false;
-    clearInterval(timer_interval); // 清除之前的计时器
-    start_time = Date.now(); // 重置开始时间
+    clearInterval(timer_interval);
+    start_time = Date.now();
     currentNumber = 0;
 
-    // 移除重开按钮的光效
-    // 移除所有按钮的光效
+    // 获取难度设置
+    const targetEmptyCells = parseInt(document.getElementById('empty-cells-input').value) || 45;
+    const safeEmptyCells = Math.min(Math.max(targetEmptyCells, 0), 64);
+
+    // 重置UI状态
     document.querySelectorAll('.number-button').forEach(btn => {
-        btn.classList.remove('game-over', 'completed-number');
+        btn.classList.remove('game-over', 'completed-number', 'selected');
     });
 
+    // 正确初始化棋盘
+    board = Array(9).fill(null).map(() =>
+        Array(9).fill(null).map(() => ({
+            value: 0,
+            locked: false
+        }))
+    );
 
-    // 启动计时器
+    // 开始游戏
     timer_interval = setInterval(update_timer, 100);
-
-    document.querySelectorAll('.number-button').forEach(btn => {
-        btn.classList.remove('selected');
-    });
-
-    board = Array(9).fill().map(() => Array(9).fill().map(() => ({
-        value: 0,
-        locked: false
-    })));
-
-    generate_sudoku();
-    update_game_information();
+    generate_sudoku(safeEmptyCells);
     create_board();
     renderBoardColors();
+    updateNumberCompletion();
+
+    // 更新游戏信息
     document.getElementById("status-info").textContent = "In Progress";
+    update_game_information();
 }
 
+/**
+ * 更新计时器显示
+ */
 function update_timer() {
     if (start_time) {
         const elapsed = (Date.now() - start_time) / 1000;
@@ -51,47 +62,51 @@ function update_timer() {
     }
 }
 
-function generate_sudoku() {
-    // 先创建一个有效的完整数独解
+/**
+ * 生成数独谜题
+ * @param {number} targetEmptyCells - 目标空格数量
+ */
+function generate_sudoku(targetEmptyCells = DEFAULT_EMPTY_CELLS) {
+    // 1. 生成完整解
     solve_sudoku(board);
 
-    // 然后根据难度挖空
-    let emptyCount = board.flat().filter(cell => cell.value === 0).length;
-    const targetEmptyCells = parseInt(document.getElementById('empty-cells-input').value) || DEFAULT_EMPTY_CELLS;
+    // 2. 挖空单元格
+    let emptyCount = 0;
+    const safeEmptyCells = Math.min(Math.max(targetEmptyCells, 0), 64);
 
-    // 确保目标空格数在合理范围内
-    const safeEmptyCells = Math.min(Math.max(targetEmptyCells, 17), 81); // 17是经典数独的最小空格数
+    let attempts = 0;
+    const MAX_ATTEMPTS = 1000;
 
-    // 随机挖空，确保数独有唯一解
-    while (emptyCount < safeEmptyCells) {
+    while (emptyCount < safeEmptyCells && attempts++ < MAX_ATTEMPTS) {
         const row = Math.floor(Math.random() * 9);
         const col = Math.floor(Math.random() * 9);
 
         if (board[row][col].value !== 0) {
-            const tempValue = board[row][col].value;
+            const temp = board[row][col].value;
             board[row][col].value = 0;
 
-            // 检查挖空后是否仍有唯一解
+            // 检查唯一解
             const tempBoard = JSON.parse(JSON.stringify(board));
-            if (count_solutions(tempBoard) !== 1) {
-                // 如果不是唯一解，恢复这个数字
-                board[row][col].value = tempValue;
-            } else {
+            if (count_solutions(tempBoard) === 1) {
                 emptyCount++;
-                board[row][col].locked = false;
+            } else {
+                board[row][col].value = temp; // 恢复
             }
         }
     }
 
-    // 锁定所有非空单元格
+    // 3. 锁定非空单元格
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
-            board[i][j].locked = board[i][j].value !== 0;
+            board[i][j].locked = (board[i][j].value !== 0);
         }
     }
 }
 
-// 解数独的辅助函数
+/**
+ * 解数独算法
+ * @param {Array} board - 数独棋盘
+ */
 function solve_sudoku(board) {
     // 清空棋盘
     for (let i = 0; i < 9; i++) {
@@ -106,12 +121,14 @@ function solve_sudoku(board) {
     // 解剩余的数独
     solve_remaining(0, 3);
 
+    // 辅助函数：填充对角线方块
     function fill_diagonal_boxes() {
         for (let box = 0; box < 9; box += 3) {
             fill_box(box, box);
         }
     }
 
+    // 辅助函数：填充单个3x3方块
     function fill_box(row, col) {
         const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         shuffle_array(nums);
@@ -124,6 +141,7 @@ function solve_sudoku(board) {
         }
     }
 
+    // 辅助函数：解剩余部分
     function solve_remaining(i, j) {
         if (j >= 9 && i < 8) {
             i++;
@@ -156,12 +174,14 @@ function solve_sudoku(board) {
         return false;
     }
 
+    // 辅助函数：检查数字是否安全
     function is_safe(row, col, num) {
         return !used_in_row(row, num) &&
             !used_in_col(col, num) &&
             !used_in_box(row - row % 3, col - col % 3, num);
     }
 
+    // 辅助函数：检查行
     function used_in_row(row, num) {
         for (let col = 0; col < 9; col++) {
             if (board[row][col].value === num) return true;
@@ -169,6 +189,7 @@ function solve_sudoku(board) {
         return false;
     }
 
+    // 辅助函数：检查列
     function used_in_col(col, num) {
         for (let row = 0; row < 9; row++) {
             if (board[row][col].value === num) return true;
@@ -176,6 +197,7 @@ function solve_sudoku(board) {
         return false;
     }
 
+    // 辅助函数：检查3x3宫格
     function used_in_box(boxStartRow, boxStartCol, num) {
         for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 3; col++) {
@@ -186,7 +208,12 @@ function solve_sudoku(board) {
     }
 }
 
-// 计算数独的解的数量
+/**
+ *
+ * @param {Array} board - 数独棋盘
+ * @param {number} count - 当前解的数量
+ * @returns {number} - 解的总数
+ */
 function count_solutions(board, count = 0) {
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
@@ -205,6 +232,9 @@ function count_solutions(board, count = 0) {
     return count + 1;
 }
 
+/**
+ * 检查数字在指定位置是否有效
+ */
 function is_valid(board, row, col, num) {
     // 检查行
     for (let x = 0; x < 9; x++) {
@@ -228,7 +258,9 @@ function is_valid(board, row, col, num) {
     return true;
 }
 
-// 辅助函数：打乱数组
+/**
+ * 打乱数组
+ */
 function shuffle_array(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -237,6 +269,13 @@ function shuffle_array(array) {
     return array;
 }
 
+// ======================
+// === 棋盘渲染 ===
+// ======================
+
+/**
+ * 创建棋盘DOM元素
+ */
 function create_board() {
     const board_element = document.getElementById("board");
     board_element.innerHTML = "";
@@ -248,8 +287,8 @@ function create_board() {
         for (let j = 0; j < 9; j++) {
             const div = document.createElement("div");
             div.className = "cell";
-            div.dataset.row = i;
-            div.dataset.col = j;
+            div.dataset.row = i.toString();
+            div.dataset.col = j.toString();
             div.addEventListener("click", () => select_cell(i, j));
             board_element.appendChild(div);
             update_cell_display(i, j);
@@ -257,6 +296,9 @@ function create_board() {
     }
 }
 
+/**
+ * 渲染棋盘颜色
+ */
 function renderBoardColors() {
     const boardElement = document.getElementById("board");
     const cells = boardElement.querySelectorAll('.cell');
@@ -276,6 +318,10 @@ function renderBoardColors() {
 // ======================
 // === 单元格操作 ===
 // ======================
+
+/**
+ * 选择单元格
+ */
 function select_cell(row, col) {
     if (game_over) return;
 
@@ -313,7 +359,6 @@ function select_cell(row, col) {
     if (currentNumber !== 0) {
         // 检查数字是否有效
         if (!is_valid(board, row, col, currentNumber)) {
-            // 找到冲突的单元格并闪烁
             flashConflictingCells(row, col, currentNumber);
             return;
         }
@@ -326,16 +371,36 @@ function select_cell(row, col) {
     }
 }
 
+/**
+ * 应用难度设置
+ */
+function apply_difficulty() {
+    let emptyCellsInput = document.getElementById('empty-cells-input');
+    // 确保传入的是字符串类型
+    let emptyCells = parseInt(emptyCellsInput.value.toString());
+
+    // 检查输入是否合法
+    if (isNaN(emptyCells) || emptyCells < 1 || emptyCells > 64) {
+        emptyCells = DEFAULT_EMPTY_CELLS;
+    }
+
+    emptyCellsInput.value = emptyCells;
+    start_game();
+}
+
+/**
+ * 闪烁冲突单元格
+ */
 function flashConflictingCells(row, col, num) {
     // 移除所有现有的冲突标记
     document.querySelectorAll('.cell.conflict').forEach(cell => {
         cell.classList.remove('conflict');
     });
 
-    // 临时移除高亮效果（避免黄光干扰）
+    // 临时降低其他单元格可见度
     const highlightedCells = document.querySelectorAll('.cell.highlighted');
     highlightedCells.forEach(cell => {
-        cell.style.opacity = '0.5'; // 降低其他单元格可见度
+        cell.style.opacity = '0.5';
     });
 
     // 检查行、列、宫格冲突
@@ -370,8 +435,6 @@ function flashConflictingCells(row, col, num) {
     conflicts.forEach(([r, c]) => {
         const cellElement = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
         cellElement.classList.add('conflict');
-
-        // 强制数字也闪烁（通过父元素缩放）
         cellElement.style.animation = 'none';
         setTimeout(() => {
             cellElement.style.animation = '';
@@ -386,9 +449,12 @@ function flashConflictingCells(row, col, num) {
         highlightedCells.forEach(cell => {
             cell.style.opacity = '';
         });
-    }, 600); // 比动画总时长稍长
+    }, 600);
 }
 
+/**
+ * 更新单元格显示
+ */
 function update_cell_display(row, col) {
     const cellElement = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
     if (!cellElement) return;
@@ -415,13 +481,17 @@ function update_cell_display(row, col) {
 // ======================
 // === 数字高亮功能 ===
 // ======================
+
+/**
+ * 更新高亮显示
+ */
 function updateHighlight() {
     // 移除所有高亮
     document.querySelectorAll('.cell.highlighted').forEach(cell => {
         cell.classList.remove('highlighted');
     });
 
-    // 高亮当前选中数字的所有单元格（包括锁定的）
+    // 高亮当前选中数字的所有单元格
     if (currentNumber !== 0) {
         document.querySelectorAll('.cell.filled').forEach(cell => {
             const row = parseInt(cell.dataset.row);
@@ -437,6 +507,9 @@ function updateHighlight() {
 // === 按钮控制 ===
 // ======================
 
+/**
+ * 初始化数字按钮
+ */
 function init_number_buttons() {
     // 数字按钮事件
     document.querySelectorAll('.number-button:not(.restart-button)').forEach(button => {
@@ -462,6 +535,9 @@ function init_number_buttons() {
     });
 }
 
+/**
+ * 更新数字按钮选中状态
+ */
 function updateNumberButtonsSelection() {
     document.querySelectorAll('.number-button').forEach(btn => {
         btn.classList.remove('selected');
@@ -475,11 +551,14 @@ function updateNumberButtonsSelection() {
 // === 游戏状态检查 ===
 // ======================
 
+/**
+ * 检查游戏是否完成
+ */
 function check_completion() {
     const isComplete = board.every(row => row.every(cell => cell.value !== 0));
     if (isComplete) {
         game_over = true;
-        clearInterval(timer_interval); // 停止计时
+        clearInterval(timer_interval);
         document.getElementById("status-info").textContent = "Completed";
 
         // 添加重开按钮的光效
@@ -492,44 +571,42 @@ function check_completion() {
 // === 信息面板更新 ===
 // ======================
 
+/**
+ * 更新游戏信息
+ */
 function update_game_information() {
-    // 时间现在由update_timer()专门更新
     const emptyCells = board.flat().filter(cell => cell.value === 0).length;
-    document.getElementById('board-info').textContent = `9 × 9 / Empty ${emptyCells}`;
-    document.getElementById('density-info').textContent = "N/A";
-}
-
-function update_solvability_information() {
-    document.getElementById('solvability-info').textContent = "N/A";
+    document.getElementById('difficulty-info').textContent = emptyCells.toString();
+    // 或者使用模板字符串：
+    // document.getElementById('difficulty-info').textContent = `${emptyCells}`;
 }
 
 // ======================
 // === 侧边栏功能 ===
 // ======================
 
+/**
+ * 解决数独（提示功能）
+ */
 function solve() {
     console.log("Solve function will be implemented for Sudoku hints");
 }
 
-function apply_difficulty() {
-    start_game();
-}
-
+/**
+ * 选择背景
+ */
 function select_background(filename) {
     document.documentElement.style.setProperty('--background-url', `url("Background_Collection/${filename}")`);
     localStorage.setItem('background', filename);
     document.getElementById('background-menu').style.display = 'none';
 }
 
-function start_timer() {
-    start_time = Date.now();
-    if (timer_interval) clearInterval(timer_interval);
-    timer_interval = setInterval(update_game_information, 100);
-}
-
+/**
+ * 更新数字完成状态
+ */
 function updateNumberCompletion() {
     // 统计每个数字出现的次数
-    const numberCounts = Array(10).fill(0); // 0-9，0不使用
+    const numberCounts = Array(10).fill(0);
     board.forEach(row => {
         row.forEach(cell => {
             if (cell.value > 0) {
@@ -554,14 +631,17 @@ function updateNumberCompletion() {
 // ======================
 
 document.addEventListener('DOMContentLoaded', function() {
+    // 恢复侧边栏状态
     const savedCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
     if (savedCollapsed) document.body.classList.add('sidebar-collapsed');
 
+    // 恢复背景设置
     const savedBg = localStorage.getItem('background');
     if (savedBg) {
         document.documentElement.style.setProperty('--background-url', `url("Background_Collection/${savedBg}")`);
     }
 
+    // 初始化游戏
     init_number_buttons();
     start_game();
 });

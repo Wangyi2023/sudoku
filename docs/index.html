@@ -21,23 +21,15 @@
                 <div class="info-title">Information</div>
                 <div class="info-line">
                     <span class="info-label">Status</span>
-                    <span id="status-info" class="info-value">In Progress</span>
+                    <span id="status-info" class="info-value"> --- </span>
                 </div>
                 <div class="info-line">
                     <span class="info-label">Time</span>
-                    <span id="time-info" class="info-value">0.0 s</span>
+                    <span id="time-info" class="info-value"> --- </span>
                 </div>
                 <div class="info-line">
-                    <span class="info-label">Size</span>
-                    <span id="board-info" class="info-value">16 × 30 / Mines 99</span>
-                </div>
-                <div class="info-line">
-                    <span class="info-label">Density</span>
-                    <span id="density-info" class="info-value">20.63%</span>
-                </div>
-                <div class="info-line">
-                    <span class="info-label">Solvability</span>
-                    <span id="solvability-info" class="info-value">false</span>
+                    <span class="info-label">Difficulty</span>
+                    <span id="difficulty-info" class="info-value"> --- </span>
                 </div>
             </div>
 
@@ -45,9 +37,18 @@
                 <button class="button" onclick="start_game()">Restart</button>
             </div>
 
-            <!-- 找到Difficulty下拉菜单部分，替换为： -->
             <div class="sidebar-button">
-                <input type="number" id="empty-cells-input" min="1" max="81" value="30" class="button" style="text-align: center;">
+                <label for="empty-cells-input" class="sr-only">Empty cells count</label>
+                <input
+                        type="number"
+                        id="empty-cells-input"
+                        min="1"
+                        max="64"
+                        value="45"
+                        class="button"
+                        style="text-align: center;"
+                        placeholder="Empty cells (1-64)"
+                >
                 <button class="button" onclick="apply_difficulty()">Apply Difficulty</button>
             </div>
 
@@ -124,15 +125,9 @@
 
     function toggle_sidebar() {
         document.body.classList.toggle('sidebar-collapsed');
-        localStorage.setItem('sidebarCollapsed', document.body.classList.contains('sidebar-collapsed'));
+        localStorage.setItem('sidebarCollapsed', document.body.classList.contains('sidebar-collapsed').toString());
 
         document.getElementById('difficulty-menu').style.display = 'none';
-        document.getElementById('background-menu').style.display = 'none';
-    }
-
-    function toggle_difficulty_dropdown() {
-        const menu = document.getElementById('difficulty-menu');
-        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
         document.getElementById('background-menu').style.display = 'none';
     }
 
@@ -168,7 +163,6 @@
         }
     });
 </script>
-
 <div id="guide-modal" class="modal" onclick="close_guide(event)">
     <div class="modal-content">
         <span class="close-button" onclick="hide_guide()">&times;</span>
