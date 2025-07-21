@@ -58,7 +58,8 @@ h1 {
     top: 0;
     transition: all 0.1s ease;
     z-index: 100;
-    background-color: rgba(1, 1, 1, 0.6);
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(3px)
 }
 
 .sidebar-content {
