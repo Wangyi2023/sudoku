@@ -48,6 +48,7 @@ h1 {
     color: black;
     font-size: 28px;
     cursor: pointer;
+    user-select: none;
 }
 
 /* Todo 1 - Sidebar */
