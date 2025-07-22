@@ -1,3 +1,5 @@
+// Document Script.js 22.07.2025
+// *** Main JS-Code ***
 let game_over = false;
 let start_time = null;
 let timer_interval = null;
