@@ -5,6 +5,7 @@ let start_time = null;
 let timer_interval = null;
 
 let board = [];
+let board_number = [];
 let currentNumber = 0;
 
 const DEFAULT_EMPTY_CELLS = 45;
@@ -36,6 +37,9 @@ function start_game() {
             locked: false
         }))
     );
+    board_number = Array(9).fill(null).map(() =>
+        Array(9).fill(0).map(() => (0))
+    );
 
     timer_interval = setInterval(update_timer, 100);
     create_game_field(targetEmptyCells);
@@ -56,14 +60,17 @@ function update_timer() {
 
 function create_game_field(targetEmptyCells = DEFAULT_EMPTY_CELLS) {
     solve_sudoku(board);
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            board_number[i][j] = board[i][j].value;
+        }
+    }
 
     let counter = 0;
-    const safe_empty_cells = Math.min(Math.max(targetEmptyCells, 0), 55);
-
     let attempts = 0;
     const MAX_ATTEMPTS = 1000;
 
-    while (counter < safe_empty_cells && attempts++ < MAX_ATTEMPTS) {
+    while (counter < targetEmptyCells && attempts++ < MAX_ATTEMPTS) {
         const row = Math.floor(Math.random() * 9);
         const col = Math.floor(Math.random() * 9);
 
@@ -251,7 +258,6 @@ function render_board_colors() {
     });
 }
 
-
 // Todo 2 - Edit Game-Field
 function select_cell(row, col) {
     if (game_over) return;
@@ -259,11 +265,7 @@ function select_cell(row, col) {
     const cell = board[row][col];
 
     if (cell.locked) {
-        if (currentNumber === cell.value) {
-            currentNumber = 0;
-        } else {
-            currentNumber = cell.value;
-        }
+        currentNumber = cell.value;
         update_number_buttons_selection();
         update_highlight();
         update_number_completion();
@@ -273,7 +275,6 @@ function select_cell(row, col) {
     if (cell.value !== 0) {
         if (currentNumber === cell.value) {
             cell.value = 0;
-            currentNumber = 0;
         } else {
             currentNumber = cell.value;
         }
@@ -306,7 +307,7 @@ function create_input_box() {
 
     if (container.style.display === 'flex') {
         input.focus();
-        input.value = ''; // Clear the input when showing
+        input.value = '';
     }
 }
 
@@ -491,6 +492,43 @@ function update_number_completion() {
             button.classList.remove('completed-number');
         }
     });
+}
+
+// Todo 4 - Solver
+function solve() {
+    let solutions = [];
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            if (board[i][j].value === 0) {
+                solutions.push([i, j]);
+            }
+        }
+    }
+    if (solutions.length === 0) {
+        console.log("--- * unsolvable * ---");
+        return;
+    }
+
+    let random_index = Math.floor(Math.random() * solutions.length);
+    const [r, c] = solutions[random_index];
+    currentNumber = board_number[r][c];
+    update_number_buttons_selection();
+    select_cell(r, c);
+
+    const solvedCell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
+    if (solvedCell) {
+        solvedCell.classList.add('solved');
+        setTimeout(() => {
+            solvedCell.classList.remove('solved');
+        }, 200);
+    }
+}
+
+async function solve_all() {
+    while (!game_over) {
+        solve();
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
 }
 
 
