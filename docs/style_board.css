@@ -80,6 +80,14 @@
     display: none !important;
 }
 
+.cell.marked {
+    background-image: url("Image/mark_white.png");
+}
+
+.cell.marked.highlighted {
+    background-image: url("Image/mark_yellow.png");
+}
+
 
 /* Todo 4 - Number Botton */
 .button-container {

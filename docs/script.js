@@ -7,6 +7,7 @@ let timer_interval = null;
 let board = [];
 let board_number = [];
 let current_number = 0;
+let mark = false;
 
 const DEFAULT_EMPTY_CELLS = 45;
 
@@ -16,6 +17,7 @@ function start_game() {
     clearInterval(timer_interval);
     start_time = Date.now();
     current_number = 0;
+    mark = false;
 
     const inputElement = document.getElementById('empty-cells-input');
     let targetEmptyCells = parseInt(document.getElementById('empty-cells-input').value) || DEFAULT_EMPTY_CELLS;
@@ -25,16 +27,14 @@ function start_game() {
     }
 
     document.querySelectorAll('.number-button').forEach(btn => {
-        btn.classList.remove('game-over', 'completed-number', 'selected');
-    });
-    document.querySelectorAll('.cell.solved-hint, .cell.conflict').forEach(cell => {
-        cell.classList.remove('solved-hint', 'conflict');
+        btn.classList.remove('game-over', 'completed-number', 'selected', 'conflict', 'marked');
     });
 
     board = Array(9).fill(null).map(() =>
         Array(9).fill(null).map(() => ({
             value: 0,
-            locked: false
+            locked: false,
+            marked: false
         }))
     );
     board_number = Array(9).fill(null).map(() =>
@@ -46,6 +46,7 @@ function start_game() {
     create_board();
     render_board_colors();
     update_number_completion();
+    update_mark_button_selection();
 
     document.getElementById("status-info").textContent = "In Progress";
     update_game_information();
@@ -260,7 +261,9 @@ function render_board_colors() {
 
 // Todo 2 - Edit Game-Field
 function select_cell(row, col) {
-    if (game_over) return;
+    if (game_over) {
+        return;
+    }
 
     const cell = board[row][col];
 
@@ -275,6 +278,7 @@ function select_cell(row, col) {
     if (cell.value !== 0) {
         if (current_number === cell.value) {
             cell.value = 0;
+            cell.marked = false;
         } else {
             current_number = cell.value;
         }
@@ -292,6 +296,9 @@ function select_cell(row, col) {
         }
 
         cell.value = current_number;
+        if (mark) {
+            cell.marked = true;
+        }
         update_cell_display(row, col);
         check_completion();
         update_highlight();
@@ -300,10 +307,15 @@ function select_cell(row, col) {
 }
 
 function clear_all() {
+    if (game_over) {
+        return;
+    }
+
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
             if (!board[i][j].locked) {
                 board[i][j].value = 0;
+                board[i][j].marked = false;
                 update_cell_display(i, j);
             }
         }
@@ -313,10 +325,11 @@ function clear_all() {
     check_completion();
     update_highlight();
     update_number_completion();
+    update_number_buttons_selection();
+    update_mark_button_selection();
 
     document.getElementById('restart-btn').classList.remove('game-over');
 }
-
 
 function create_input_box() {
     const container = document.getElementById('difficulty-input-container');
@@ -409,6 +422,12 @@ function update_cell_display(row, col) {
         }
     }
 
+    if (cell.marked) {
+        cell_element.classList.add('marked');
+    } else {
+        cell_element.classList.remove('marked');
+    }
+
     if (cell.value !== 0 && cell.value === current_number) {
         cell_element.classList.add('selected');
     } else {
@@ -434,7 +453,7 @@ function update_highlight() {
 
 // Todo 3 - Init / Update Information
 function init_number_buttons() {
-    document.querySelectorAll('.number-button:not(.restart-button)').forEach(button => {
+    document.querySelectorAll('.number-button:not(.restart-button):not(.mark-button):not(.clear-mark-button)').forEach(button => {
         button.addEventListener('click', function() {
             const num = parseInt(this.dataset.number);
 
@@ -454,15 +473,63 @@ function init_number_buttons() {
     restartBtn.addEventListener('click', function() {
         start_game();
     });
+
+    const markBtn = document.getElementById('mark-btn');
+    markBtn.addEventListener('click', change_mark_status);
+
+    const clearMarkBtn = document.getElementById('clear-mark-btn');
+    clearMarkBtn.addEventListener('click', clear_all_marked_cells)
+}
+
+function change_mark_status() {
+    mark = !mark;
+    update_mark_button_selection();
+}
+
+function clear_all_marked_cells() {
+    if (game_over) {
+        return;
+    }
+
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            if (!board[i][j].locked && board[i][j].marked) {
+                board[i][j].value = 0;
+                board[i][j].marked = false;
+                update_cell_display(i, j);
+            }
+        }
+    }
+    current_number = 0;
+    game_over = false;
+    check_completion();
+    update_highlight();
+    update_number_completion();
+    update_number_buttons_selection();
+    update_mark_button_selection();
+
+    document.getElementById('restart-btn').classList.remove('game-over');
 }
 
 function update_number_buttons_selection() {
-    document.querySelectorAll('.number-button').forEach(btn => {
+    document.querySelectorAll('.number-button:not(.mark-button)').forEach(btn => {
         btn.classList.remove('selected');
         if (parseInt(btn.dataset.number) === current_number) {
             btn.classList.add('selected');
         }
     });
+}
+
+function update_mark_button_selection() {
+    if (mark) {
+        document.getElementById('mark-btn').classList.add('selected');
+        const flagIcon = document.getElementById('mark-flag');
+        flagIcon.src = "Image/flag_black.png";
+    } else {
+        document.getElementById('mark-btn').classList.remove('selected');
+        const flagIcon = document.getElementById('mark-flag');
+        flagIcon.src = "Image/flag_white.png";
+    }
 }
 
 function check_completion() {

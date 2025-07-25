@@ -38,6 +38,10 @@
             </div>
 
             <div class="sidebar-button">
+                <button class="button" onclick="change_mark_status()">Mark</button>
+            </div>
+
+            <div class="sidebar-button">
                 <button class="button" onclick="clear_all()">Clear All</button>
             </div>
 
@@ -94,6 +98,9 @@
 
     <div class="button-container">
         <div class="number-row">
+            <button class="number-button mark-button" id="mark-btn">
+                <img src="Image/flag_white.png" alt="Flag" id="mark-flag" class="flag-icon">
+            </button>
             <button class="number-button" data-number="1">1</button>
             <button class="number-button" data-number="2">2</button>
             <button class="number-button" data-number="3">3</button>
@@ -102,11 +109,14 @@
         </div>
 
         <div class="number-row">
+            <button class="number-button clear-mark-button" id="clear-mark-btn">
+                <img src="Image/flag_white_x.png" alt="Flag" id="clear-mark-flag" class="flag-icon">
+            </button>
             <button class="number-button" data-number="6">6</button>
             <button class="number-button" data-number="7">7</button>
             <button class="number-button" data-number="8">8</button>
             <button class="number-button" data-number="9">9</button>
-            <button class="number-button restart-button" id="restart-btn">↻</button>
+            <button class="number-button restart-button" id="restart-btn">⭮</button>
         </div>
     </div>
 </div>
