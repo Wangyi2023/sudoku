@@ -491,6 +491,7 @@ function clear_all_marked_cells() {
         return;
     }
 
+
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
             if (!board[i][j].locked && board[i][j].marked) {
@@ -502,6 +503,7 @@ function clear_all_marked_cells() {
     }
     current_number = 0;
     game_over = false;
+    mark = false;
     check_completion();
     update_highlight();
     update_number_completion();
