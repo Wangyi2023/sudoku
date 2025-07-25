@@ -318,6 +318,43 @@ body.sidebar-collapsed .expand-button {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.modal-end {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    background-color: transparent;
+}
+
+.modal-container {
+    position: fixed;
+    z-index: 10;
+    bottom: 10%;
+    padding: 10px;
+    left: 0;
+    width: 100%;
+    height: 20%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px)
+}
+
+.modal-content-end {
+    background: transparent;
+    margin: 0 auto;
+    width: 80%;
+    max-width: 600px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: white;
+    position: relative;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
 .close-button {
     position: absolute;
     top: 8px;
@@ -357,3 +394,4 @@ body.sidebar-collapsed .expand-button {
      white-space: nowrap;
      border-width: 0;
  }
+

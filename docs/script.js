@@ -6,7 +6,7 @@ let timer_interval = null;
 
 let board = [];
 let board_number = [];
-let currentNumber = 0;
+let current_number = 0;
 
 const DEFAULT_EMPTY_CELLS = 45;
 
@@ -15,7 +15,7 @@ function start_game() {
     game_over = false;
     clearInterval(timer_interval);
     start_time = Date.now();
-    currentNumber = 0;
+    current_number = 0;
 
     const inputElement = document.getElementById('empty-cells-input');
     let targetEmptyCells = parseInt(document.getElementById('empty-cells-input').value) || DEFAULT_EMPTY_CELLS;
@@ -265,7 +265,7 @@ function select_cell(row, col) {
     const cell = board[row][col];
 
     if (cell.locked) {
-        currentNumber = cell.value;
+        current_number = cell.value;
         update_number_buttons_selection();
         update_highlight();
         update_number_completion();
@@ -273,10 +273,10 @@ function select_cell(row, col) {
     }
 
     if (cell.value !== 0) {
-        if (currentNumber === cell.value) {
+        if (current_number === cell.value) {
             cell.value = 0;
         } else {
-            currentNumber = cell.value;
+            current_number = cell.value;
         }
         update_number_buttons_selection();
         update_cell_display(row, col);
@@ -285,19 +285,38 @@ function select_cell(row, col) {
         return;
     }
 
-    if (currentNumber !== 0) {
-        if (!is_valid(board, row, col, currentNumber)) {
-            flash_conflicting_cells(row, col, currentNumber);
+    if (current_number !== 0) {
+        if (!is_valid(board, row, col, current_number)) {
+            flash_conflicting_cells(row, col, current_number);
             return;
         }
 
-        cell.value = currentNumber;
+        cell.value = current_number;
         update_cell_display(row, col);
         check_completion();
         update_highlight();
         update_number_completion();
     }
 }
+
+function clear_all() {
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            if (!board[i][j].locked) {
+                board[i][j].value = 0;
+                update_cell_display(i, j);
+            }
+        }
+    }
+    current_number = 0;
+    game_over = false;
+    check_completion();
+    update_highlight();
+    update_number_completion();
+
+    document.getElementById('restart-btn').classList.remove('game-over');
+}
+
 
 function create_input_box() {
     const container = document.getElementById('difficulty-input-container');
@@ -313,10 +332,9 @@ function create_input_box() {
 
 function apply_difficulty() {
     let empty_cells_input = document.getElementById('empty-cells-input');
-    let empty_cells = parseInt(empty_cells_input.value);
+    let empty_cells = parseInt(empty_cells_input.value.toString());
 
     if (isNaN(empty_cells) || empty_cells < 1 || empty_cells > 55) {
-        empty_cells = DEFAULT_EMPTY_CELLS;
         empty_cells_input.value = DEFAULT_EMPTY_CELLS;
     }
 
@@ -391,7 +409,7 @@ function update_cell_display(row, col) {
         }
     }
 
-    if (cell.value !== 0 && cell.value === currentNumber) {
+    if (cell.value !== 0 && cell.value === current_number) {
         cell_element.classList.add('selected');
     } else {
         cell_element.classList.remove('selected');
@@ -403,11 +421,11 @@ function update_highlight() {
         cell.classList.remove('highlighted');
     });
 
-    if (currentNumber !== 0) {
+    if (current_number !== 0) {
         document.querySelectorAll('.cell.filled').forEach(cell => {
             const row = parseInt(cell.dataset.row);
             const col = parseInt(cell.dataset.col);
-            if (board[row][col].value === currentNumber) {
+            if (board[row][col].value === current_number) {
                 cell.classList.add('highlighted');
             }
         });
@@ -420,11 +438,11 @@ function init_number_buttons() {
         button.addEventListener('click', function() {
             const num = parseInt(this.dataset.number);
 
-            if (currentNumber === num) {
-                currentNumber = 0;
+            if (current_number === num) {
+                current_number = 0;
                 this.classList.remove('selected');
             } else {
-                currentNumber = num;
+                current_number = num;
                 update_number_buttons_selection();
             }
 
@@ -441,7 +459,7 @@ function init_number_buttons() {
 function update_number_buttons_selection() {
     document.querySelectorAll('.number-button').forEach(btn => {
         btn.classList.remove('selected');
-        if (parseInt(btn.dataset.number) === currentNumber) {
+        if (parseInt(btn.dataset.number) === current_number) {
             btn.classList.add('selected');
         }
     });
@@ -454,9 +472,10 @@ function check_completion() {
         clearInterval(timer_interval);
         document.getElementById("status-info").textContent = "Completed";
 
-        currentNumber = 0;
+        current_number = 0;
         update_number_buttons_selection();
         update_highlight();
+        show_end_message(true);
 
         const restart_button = document.getElementById('restart-btn');
         restart_button.classList.add('game-over');
@@ -501,17 +520,20 @@ function solve() {
         for (let j = 0; j < 9; j++) {
             if (board[i][j].value === 0) {
                 solutions.push([i, j]);
+            } else if (board[i][j].value !== board_number[i][j]) {
+                show_end_message(false);
+                return;
             }
         }
     }
     if (solutions.length === 0) {
-        console.log("--- * unsolvable * ---");
+        console.log("--- * Error * ---");
         return;
     }
 
     let random_index = Math.floor(Math.random() * solutions.length);
     const [r, c] = solutions[random_index];
-    currentNumber = board_number[r][c];
+    current_number = board_number[r][c];
     update_number_buttons_selection();
     select_cell(r, c);
 
@@ -527,8 +549,36 @@ function solve() {
 async function solve_all() {
     while (!game_over) {
         solve();
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 50));
     }
+}
+
+// End-Message
+function show_end_message(solved) {
+    const content = document.getElementById('end-message-content');
+
+    content.innerHTML = '';
+
+    const title = document.createElement('h2');
+    title.style.textAlign = 'center';
+    title.style.marginBottom = '-5px';
+    title.textContent = solved ? 'Congratulations' : 'Error';
+
+    const message = document.createElement('p');
+    message.style.textAlign = 'center';
+    message.style.fontSize = '16px';
+    message.innerHTML = solved
+        ? "You've successfully solved the Sudoku puzzle.<br> Click anywhere to close this message."
+        : "You made a mistake in the puzzle, so that it can’t be solved anymore.<br> Click anywhere to close this message.";
+
+    content.appendChild(title);
+    content.appendChild(message);
+
+    document.getElementById('end-message-modal').style.display = 'block';
+}
+
+function hide_end_message() {
+    document.getElementById('end-message-modal').style.display = 'none';
 }
 
 

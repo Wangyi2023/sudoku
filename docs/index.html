@@ -38,6 +38,10 @@
             </div>
 
             <div class="sidebar-button">
+                <button class="button" onclick="clear_all()">Clear All</button>
+            </div>
+
+            <div class="sidebar-button">
                 <button class="button" onclick="create_input_box()">Change Difficulty</button>
                 <div id="difficulty-input-container" class="difficulty-input-container" style="display: none;">
                     <input
@@ -190,6 +194,14 @@
                     The game will automatically detect when you have completed the board correctly. When all cells are filled in correctly, the game is complete.<br>
                 </p>
             </div>
+        </div>
+    </div>
+</div>
+
+<div id="end-message-modal" class="modal-end" onclick="hide_end_message()">
+    <div class="modal-container" onclick="hide_end_message()">
+        <div class="modal-content-end">
+            <div id="end-message-content"></div>
         </div>
     </div>
 </div>
