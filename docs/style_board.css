@@ -12,15 +12,13 @@
     bottom: 0;
     border: 2px solid rgba(255, 255, 255, 0.9);
     pointer-events: none;
-    z-index: 100;
+    z-index: 10;
 
     transform: translateZ(0);
     backface-visibility: hidden;
 }
 
 #board {
-    height: 361px;
-    width: 361px;
     display: grid;
     background: transparent;
 }
