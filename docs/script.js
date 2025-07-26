@@ -9,6 +9,8 @@ let board_number = [];
 let current_number = 0;
 let mark = false;
 
+let is_solving = false;
+
 const DEFAULT_EMPTY_CELLS = 45;
 
 // Todo 1 - Start / Restart
@@ -18,6 +20,7 @@ function start_game() {
     start_time = Date.now();
     current_number = 0;
     mark = false;
+    is_solving = false;
 
     const inputElement = document.getElementById('empty-cells-input');
     let targetEmptyCells = parseInt(document.getElementById('empty-cells-input').value) || DEFAULT_EMPTY_CELLS;
@@ -615,7 +618,12 @@ function solve() {
 }
 
 async function solve_all() {
-    while (!game_over) {
+    if (is_solving) {
+        is_solving = false;
+        return;
+    }
+    is_solving = true;
+    while (!game_over && is_solving) {
         solve();
         await new Promise(resolve => setTimeout(resolve, 50));
     }
