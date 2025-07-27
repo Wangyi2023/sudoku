@@ -663,6 +663,7 @@ function hide_end_message() {
 
 function handle_keypress(event) {
     hide_end_message();
+
     const key = event.key.toLowerCase();
     if (key === 'escape') {
         hide_guide();
