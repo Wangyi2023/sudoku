@@ -55,14 +55,6 @@ function start_game() {
 
     document.getElementById("status-info").textContent = "In Progress";
     update_game_information();
-
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Tab') {
-            event.preventDefault();
-            const boardElement = document.getElementById('board');
-            boardElement.focus();
-        }
-    });
 }
 
 function update_timer() {
