@@ -7,8 +7,8 @@ let timer_interval = null;
 let board = [];
 let board_number = [];
 let current_number = 0;
-let mark = false;
 
+let mark = false;
 let is_solving = false;
 let shortcuts_enabled = true;
 
@@ -252,8 +252,8 @@ function render_board_colors() {
     const boardElement = document.getElementById("board");
     const cells = boardElement.querySelectorAll('.cell');
 
-    const dark = 'rgba(1, 1, 1, 0.6)';
-    const light = 'rgba(1, 1, 1, 0.75)';
+    const dark = 'rgba(0, 0, 0, 0.65)';
+    const light = 'rgba(0, 0, 0, 0.8)';
 
     cells.forEach(cell => {
         const row = parseInt(cell.dataset.row);
