@@ -10,6 +10,7 @@ let current_number = 0;
 let mark = false;
 
 let is_solving = false;
+let shortcuts_enabled = true;
 
 const DEFAULT_EMPTY_CELLS = 45;
 
@@ -21,6 +22,7 @@ function start_game() {
     current_number = 0;
     mark = false;
     is_solving = false;
+    shortcuts_enabled = true;
 
     const inputElement = document.getElementById('empty-cells-input');
     let targetEmptyCells = parseInt(document.getElementById('empty-cells-input').value) || DEFAULT_EMPTY_CELLS;
@@ -336,11 +338,13 @@ function clear_all() {
 
 function create_input_box() {
     const container = document.getElementById('difficulty-input-container');
-    const input = document.getElementById('empty-cells-input');
+    const isOpening = container.style.display !== 'flex';
 
-    container.style.display = container.style.display === 'flex' ? 'none' : 'flex';
+    container.style.display = isOpening ? 'flex' : 'none';
+    shortcuts_enabled = !isOpening;
 
-    if (container.style.display === 'flex') {
+    if (isOpening) {
+        const input = document.getElementById('empty-cells-input');
         input.focus();
         input.value = '';
     }
@@ -657,6 +661,33 @@ function hide_end_message() {
     document.getElementById('end-message-modal').style.display = 'none';
 }
 
+function handle_key_press(event) {
+    const key = event.key.toLowerCase();
+    if (key === 'escape') {
+        hide_guide();
+        hide_end_message();
+        document.getElementById('difficulty-input-container').style.display = 'none';
+        document.getElementById('background-menu').style.display = 'none';
+        shortcuts_enabled = true;
+        return;
+    }
+
+    if (!shortcuts_enabled) return;
+
+    if (key >= '1' && key <= '9') {
+        const num = parseInt(key);
+        current_number = (current_number === num) ? 0 : num;
+        update_number_buttons_selection();
+        update_highlight();
+        return;
+    }
+
+    switch(key) {
+        case 'r': start_game(); break;
+        case 'm': change_mark_status(); break;
+    }
+}
+
 
 document.addEventListener('DOMContentLoaded', function() {
     const savedCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
@@ -666,6 +697,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (savedBg) {
         document.documentElement.style.setProperty('--background-url', `url("Background_Collection/${savedBg}")`);
     }
+
+    document.addEventListener('keydown', handle_key_press);
 
     init_number_buttons();
     start_game();
