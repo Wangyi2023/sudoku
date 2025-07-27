@@ -661,11 +661,11 @@ function hide_end_message() {
     document.getElementById('end-message-modal').style.display = 'none';
 }
 
-function handle_key_press(event) {
+function handle_keypress(event) {
+    hide_end_message();
     const key = event.key.toLowerCase();
     if (key === 'escape') {
         hide_guide();
-        hide_end_message();
         document.getElementById('difficulty-input-container').style.display = 'none';
         document.getElementById('background-menu').style.display = 'none';
         shortcuts_enabled = true;
@@ -685,6 +685,7 @@ function handle_key_press(event) {
     switch(key) {
         case 'r': start_game(); break;
         case 'm': change_mark_status(); break;
+        case 's': solve(); break;
     }
 }
 
@@ -698,7 +699,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.documentElement.style.setProperty('--background-url', `url("Background_Collection/${savedBg}")`);
     }
 
-    document.addEventListener('keydown', handle_key_press);
+    document.addEventListener('keydown', handle_keypress);
 
     init_number_buttons();
     start_game();
