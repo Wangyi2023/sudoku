@@ -68,6 +68,7 @@
     overflow: hidden;
 }
 
+
 .cell.highlighted::after {
     content: '';
     position: absolute;
