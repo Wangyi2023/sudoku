@@ -704,19 +704,15 @@ function handle_keypress(event) {
     if (current_number !== 0) {
         switch (key) {
             case 'arrowleft':
-            case 'a':
                 current_number = current_number > 1 ? current_number - 1 : 9;
                 break;
             case 'arrowright':
-            case 'd':
                 current_number = current_number < 9 ? current_number + 1 : 1;
                 break;
             case 'arrowup':
-            case 'w':
                 if (current_number > 5) current_number -= 5;
                 break;
             case 'arrowdown':
-            case 's':
                 if (current_number < 5) current_number += 5;
                 break;
         }
