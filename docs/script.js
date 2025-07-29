@@ -6,6 +6,7 @@ let timer_interval = null;
 
 let board = [];
 let board_number = [];
+let count_array = [];
 let current_number = 0;
 
 let mark = false;
@@ -16,13 +17,15 @@ const DEFAULT_EMPTY_CELLS = 45;
 
 // Todo 1 - Start / Restart
 function start_game() {
-    game_over = false;
     clearInterval(timer_interval);
     start_time = Date.now();
+
     current_number = 0;
+    game_over = false;
     mark = false;
     is_solving = false;
     shortcuts_enabled = true;
+    count_array = Array(10).fill(0);
 
     const inputElement = document.getElementById('empty-cells-input');
     let targetEmptyCells = parseInt(document.getElementById('empty-cells-input').value) || DEFAULT_EMPTY_CELLS;
@@ -65,6 +68,7 @@ function update_timer() {
 }
 
 function create_game_field(targetEmptyCells = DEFAULT_EMPTY_CELLS) {
+    count_array = Array(10).fill(0);
     solve_sudoku(board);
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
@@ -95,7 +99,11 @@ function create_game_field(targetEmptyCells = DEFAULT_EMPTY_CELLS) {
 
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
-            board[i][j].locked = (board[i][j].value !== 0);
+            let v = board[i][j].value;
+            if (v !== 0) {
+                board[i][j].locked = true;
+                count_array[v]++;
+            }
         }
     }
 }
@@ -282,6 +290,7 @@ function select_cell(row, col) {
 
     if (cell.value !== 0) {
         if (current_number === cell.value) {
+            count_array[current_number]--;
             cell.value = 0;
             cell.marked = false;
         } else {
@@ -300,15 +309,32 @@ function select_cell(row, col) {
             return;
         }
 
+        count_array[current_number]++;
         cell.value = current_number;
         if (mark) {
             cell.marked = true;
         }
+
+        if (count_array[current_number] >= 9) {
+            current_number = find_next_uncompleted_number();
+            update_number_buttons_selection();
+        }
+
         update_cell_display(row, col);
         check_completion();
         update_highlight();
         update_number_completion();
     }
+}
+
+function find_next_uncompleted_number() {
+    for (let next = current_number + 1; next <= 9; next++) {
+        if (count_array[next] < 9) return next;
+    }
+    for (let next = 1; next < current_number; next++) {
+        if (count_array[next] < 9) return next;
+    }
+    return 0;
 }
 
 function clear_all() {
@@ -319,9 +345,13 @@ function clear_all() {
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
             if (!board[i][j].locked) {
-                board[i][j].value = 0;
-                board[i][j].marked = false;
-                update_cell_display(i, j);
+                let v = board[i][j].value;
+                if (v !== 0) {
+                    count_array[v]--;
+                    board[i][j].value = 0;
+                    board[i][j].marked = false;
+                    update_cell_display(i, j);
+                }
             }
         }
     }
@@ -497,9 +527,13 @@ function clear_all_marked_cells() {
         for (let i = 0; i < 9; i++) {
             for (let j = 0; j < 9; j++) {
                 if (!board[i][j].locked && board[i][j].marked) {
-                    board[i][j].value = 0;
-                    board[i][j].marked = false;
-                    update_cell_display(i, j);
+                    let v = board[i][j].value;
+                    if (v !== 0) {
+                        count_array[v]--;
+                        board[i][j].value = 0;
+                        board[i][j].marked = false;
+                        update_cell_display(i, j);
+                    }
                 }
             }
         }
@@ -534,7 +568,7 @@ function update_mark_button_selection() {
 }
 
 function check_completion() {
-    const is_complete = board.every(row => row.every(cell => cell.value !== 0));
+    const is_complete = count_array.slice(1).every(count => count >= 9);
     if (is_complete) {
         game_over = true;
         clearInterval(timer_interval);
@@ -562,18 +596,9 @@ function select_background(filename) {
 }
 
 function update_number_completion() {
-    const numberCounts = Array(10).fill(0);
-    board.forEach(row => {
-        row.forEach(cell => {
-            if (cell.value > 0) {
-                numberCounts[cell.value]++;
-            }
-        });
-    });
-
     document.querySelectorAll('.number-button:not(.restart-button)').forEach(button => {
         const num = parseInt(button.dataset.number);
-        if (numberCounts[num] >= 9) {
+        if (count_array[num] >= 9) {
             button.classList.add('completed-number');
         } else {
             button.classList.remove('completed-number');
@@ -674,6 +699,29 @@ function handle_keypress(event) {
         update_number_buttons_selection();
         update_highlight();
         return;
+    }
+
+    if (current_number !== 0) {
+        switch (key) {
+            case 'arrowleft':
+            case 'a':
+                current_number = current_number > 1 ? current_number - 1 : 9;
+                break;
+            case 'arrowright':
+            case 'd':
+                current_number = current_number < 9 ? current_number + 1 : 1;
+                break;
+            case 'arrowup':
+            case 'w':
+                if (current_number > 5) current_number -= 5;
+                break;
+            case 'arrowdown':
+            case 's':
+                if (current_number < 5) current_number += 5;
+                break;
+        }
+        update_number_buttons_selection();
+        update_highlight();
     }
 
     switch(key) {
