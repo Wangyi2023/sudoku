@@ -327,7 +327,6 @@ function clear_all() {
     }
     current_number = 0;
     game_over = false;
-    check_completion();
     update_highlight();
     update_number_completion();
     update_number_buttons_selection();
@@ -494,29 +493,23 @@ function change_mark_status() {
 }
 
 function clear_all_marked_cells() {
-    if (game_over) {
-        return;
-    }
-
-    for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
-            if (!board[i][j].locked && board[i][j].marked) {
-                board[i][j].value = 0;
-                board[i][j].marked = false;
-                update_cell_display(i, j);
+    if (!game_over) {
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (!board[i][j].locked && board[i][j].marked) {
+                    board[i][j].value = 0;
+                    board[i][j].marked = false;
+                    update_cell_display(i, j);
+                }
             }
         }
     }
     current_number = 0;
-    game_over = false;
     mark = false;
-    check_completion();
     update_highlight();
     update_number_completion();
     update_number_buttons_selection();
     update_mark_button_selection();
-
-    document.getElementById('restart-btn').classList.remove('game-over');
 }
 
 function update_number_buttons_selection() {
