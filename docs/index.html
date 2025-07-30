@@ -58,6 +58,7 @@
                             min="1"
                             max="55"
                             placeholder="Enter 1-55"
+                            aria-label="Number of empty cells (1-55)"
                             onkeydown="if(event.key === 'Enter') apply_difficulty()"
                     >
                     <button class="confirm-button" onclick="apply_difficulty()">Confirm</button>
@@ -145,8 +146,13 @@
         document.body.classList.toggle('sidebar-collapsed');
         localStorage.setItem('sidebarCollapsed', document.body.classList.contains('sidebar-collapsed').toString());
 
-        document.getElementById('difficulty-menu').style.display = 'none';
+        close_all_sidebar_menus();
+    }
+
+    function close_all_sidebar_menus() {
+        document.getElementById('difficulty-input-container').style.display = 'none';
         document.getElementById('background-menu').style.display = 'none';
+        shortcuts_enabled = true;
     }
 
     function toggle_background_dropdown() {

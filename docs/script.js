@@ -387,7 +387,7 @@ function apply_difficulty() {
         empty_cells_input.value = DEFAULT_EMPTY_CELLS;
     }
 
-    document.getElementById('difficulty-input-container').style.display = 'none';
+    close_all_sidebar_menus();
     start_game();
 }
 
@@ -688,6 +688,11 @@ function handle_keypress(event) {
         document.getElementById('difficulty-input-container').style.display = 'none';
         document.getElementById('background-menu').style.display = 'none';
         shortcuts_enabled = true;
+        return;
+    }
+
+    if (key === 'c') {
+        toggle_sidebar();
         return;
     }
 
