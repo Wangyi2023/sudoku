@@ -15,7 +15,7 @@ let shortcuts_enabled = true;
 
 const DEFAULT_EMPTY_CELLS = 45;
 
-// Todo 1 - Start / Restart
+// Part 1 - Game Logic
 function start_game() {
     clearInterval(timer_interval);
     start_time = Date.now();
@@ -58,13 +58,6 @@ function start_game() {
 
     document.getElementById("status-info").textContent = "In Progress";
     update_game_information();
-}
-
-function update_timer() {
-    if (start_time) {
-        const elapsed = (Date.now() - start_time) / 1000;
-        document.getElementById('time-info').textContent = `${elapsed.toFixed(1)} s`;
-    }
 }
 
 function create_game_field(targetEmptyCells = DEFAULT_EMPTY_CELLS) {
@@ -236,43 +229,6 @@ function shuffle_array(array) {
     return array;
 }
 
-function create_board() {
-    const board_element = document.getElementById("board");
-    board_element.innerHTML = "";
-
-    board_element.style.gridTemplateRows = "repeat(9, 40px)";
-    board_element.style.gridTemplateColumns = "repeat(9, 40px)";
-
-    for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
-            const div = document.createElement("div");
-            div.className = "cell";
-            div.dataset.row = i.toString();
-            div.dataset.col = j.toString();
-            div.addEventListener("click", () => select_cell(i, j));
-            board_element.appendChild(div);
-            update_cell_display(i, j);
-        }
-    }
-}
-
-function render_board_colors() {
-    const boardElement = document.getElementById("board");
-    const cells = boardElement.querySelectorAll('.cell');
-
-    const dark = 'rgba(0, 0, 0, 0.65)';
-    const light = 'rgba(0, 0, 0, 0.8)';
-
-    cells.forEach(cell => {
-        const row = parseInt(cell.dataset.row);
-        const col = parseInt(cell.dataset.col);
-        const boxRow = Math.floor(row / 3);
-        const boxCol = Math.floor(col / 3);
-        cell.style.backgroundColor = (boxRow + boxCol) % 2 === 0 ? dark : light;
-    });
-}
-
-// Todo 2 - Edit Game-Field
 function select_cell(row, col) {
     if (game_over) {
         return;
@@ -364,6 +320,95 @@ function clear_all() {
 
     document.getElementById('restart-btn').classList.remove('game-over');
 }
+
+function clear_all_marked_cells() {
+    if (!game_over) {
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (!board[i][j].locked && board[i][j].marked) {
+                    let v = board[i][j].value;
+                    if (v !== 0) {
+                        count_array[v]--;
+                        board[i][j].value = 0;
+                        board[i][j].marked = false;
+                        update_cell_display(i, j);
+                    }
+                }
+            }
+        }
+    }
+    current_number = 0;
+    mark = false;
+    update_highlight();
+    update_number_completion();
+    update_number_buttons_selection();
+    update_mark_button_selection();
+}
+
+function solve() {
+    let solutions = [];
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            if (board[i][j].value === 0) {
+                solutions.push([i, j]);
+            } else if (board[i][j].value !== board_number[i][j]) {
+                show_end_message(false);
+                return;
+            }
+        }
+    }
+    if (solutions.length === 0) {
+        console.log("--- * Error * ---");
+        return;
+    }
+
+    let random_index = Math.floor(Math.random() * solutions.length);
+    const [r, c] = solutions[random_index];
+    current_number = board_number[r][c];
+    update_number_buttons_selection();
+    select_cell(r, c);
+
+    const solvedCell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
+    if (solvedCell) {
+        solvedCell.classList.add('solved');
+        setTimeout(() => {
+            solvedCell.classList.remove('solved');
+        }, 200);
+    }
+}
+
+async function solve_all() {
+    if (is_solving) {
+        is_solving = false;
+        return;
+    }
+    is_solving = true;
+    while (!game_over && is_solving) {
+        solve();
+        await new Promise(resolve => setTimeout(resolve, 50));
+    }
+}
+
+function check_completion() {
+    const is_complete = count_array.slice(1).every(count => count >= 9);
+    if (is_complete) {
+        game_over = true;
+        clearInterval(timer_interval);
+        document.getElementById("status-info").textContent = "Completed";
+
+        current_number = 0;
+        update_number_buttons_selection();
+        update_highlight();
+        show_end_message(true);
+
+        const restart_button = document.getElementById('restart-btn');
+        restart_button.classList.add('game-over');
+    }
+}
+
+
+
+// Part 2 - Ui
 
 function create_input_box() {
     const container = document.getElementById('difficulty-input-container');
@@ -487,7 +532,49 @@ function update_highlight() {
     }
 }
 
-// Todo 3 - Init / Update Information
+function render_board_colors() {
+    const boardElement = document.getElementById("board");
+    const cells = boardElement.querySelectorAll('.cell');
+
+    const dark = 'rgba(0, 0, 0, 0.65)';
+    const light = 'rgba(0, 0, 0, 0.8)';
+
+    cells.forEach(cell => {
+        const row = parseInt(cell.dataset.row);
+        const col = parseInt(cell.dataset.col);
+        const boxRow = Math.floor(row / 3);
+        const boxCol = Math.floor(col / 3);
+        cell.style.backgroundColor = (boxRow + boxCol) % 2 === 0 ? dark : light;
+    });
+}
+
+function create_board() {
+    const board_element = document.getElementById("board");
+    board_element.innerHTML = "";
+
+    board_element.style.gridTemplateRows = "repeat(9, 40px)";
+    board_element.style.gridTemplateColumns = "repeat(9, 40px)";
+
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            const div = document.createElement("div");
+            div.className = "cell";
+            div.dataset.row = i.toString();
+            div.dataset.col = j.toString();
+            div.addEventListener("click", () => select_cell(i, j));
+            board_element.appendChild(div);
+            update_cell_display(i, j);
+        }
+    }
+}
+
+function update_timer() {
+    if (start_time) {
+        const elapsed = (Date.now() - start_time) / 1000;
+        document.getElementById('time-info').textContent = `${elapsed.toFixed(1)} s`;
+    }
+}
+
 function init_number_buttons() {
     document.querySelectorAll('.number-button:not(.restart-button):not(.mark-button):not(.clear-mark-button)').forEach(button => {
         button.addEventListener('click', function() {
@@ -522,30 +609,6 @@ function change_mark_status() {
     update_mark_button_selection();
 }
 
-function clear_all_marked_cells() {
-    if (!game_over) {
-        for (let i = 0; i < 9; i++) {
-            for (let j = 0; j < 9; j++) {
-                if (!board[i][j].locked && board[i][j].marked) {
-                    let v = board[i][j].value;
-                    if (v !== 0) {
-                        count_array[v]--;
-                        board[i][j].value = 0;
-                        board[i][j].marked = false;
-                        update_cell_display(i, j);
-                    }
-                }
-            }
-        }
-    }
-    current_number = 0;
-    mark = false;
-    update_highlight();
-    update_number_completion();
-    update_number_buttons_selection();
-    update_mark_button_selection();
-}
-
 function update_number_buttons_selection() {
     document.querySelectorAll('.number-button:not(.mark-button)').forEach(btn => {
         btn.classList.remove('selected');
@@ -564,23 +627,6 @@ function update_mark_button_selection() {
         document.getElementById('mark-btn').classList.remove('selected');
         const flagIcon = document.getElementById('mark-flag');
         flagIcon.src = "Image/flag_white.png";
-    }
-}
-
-function check_completion() {
-    const is_complete = count_array.slice(1).every(count => count >= 9);
-    if (is_complete) {
-        game_over = true;
-        clearInterval(timer_interval);
-        document.getElementById("status-info").textContent = "Completed";
-
-        current_number = 0;
-        update_number_buttons_selection();
-        update_highlight();
-        show_end_message(true);
-
-        const restart_button = document.getElementById('restart-btn');
-        restart_button.classList.add('game-over');
     }
 }
 
@@ -606,52 +652,6 @@ function update_number_completion() {
     });
 }
 
-// Todo 4 - Solver
-function solve() {
-    let solutions = [];
-    for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
-            if (board[i][j].value === 0) {
-                solutions.push([i, j]);
-            } else if (board[i][j].value !== board_number[i][j]) {
-                show_end_message(false);
-                return;
-            }
-        }
-    }
-    if (solutions.length === 0) {
-        console.log("--- * Error * ---");
-        return;
-    }
-
-    let random_index = Math.floor(Math.random() * solutions.length);
-    const [r, c] = solutions[random_index];
-    current_number = board_number[r][c];
-    update_number_buttons_selection();
-    select_cell(r, c);
-
-    const solvedCell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
-    if (solvedCell) {
-        solvedCell.classList.add('solved');
-        setTimeout(() => {
-            solvedCell.classList.remove('solved');
-        }, 200);
-    }
-}
-
-async function solve_all() {
-    if (is_solving) {
-        is_solving = false;
-        return;
-    }
-    is_solving = true;
-    while (!game_over && is_solving) {
-        solve();
-        await new Promise(resolve => setTimeout(resolve, 50));
-    }
-}
-
-// End-Message
 function show_end_message(solved) {
     const content = document.getElementById('end-message-content');
 
@@ -731,7 +731,6 @@ function handle_keypress(event) {
         case 's': solve(); break;
     }
 }
-
 
 document.addEventListener('DOMContentLoaded', function() {
     const savedCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
