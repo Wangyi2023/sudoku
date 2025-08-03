@@ -1,32 +1,15 @@
-.board-wrapper {
-    position: relative;
-    display: inline-block;
-    padding: 2px;
-}
-
-.board-border {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border: 2px solid rgba(255, 255, 255, 0.9);
-    pointer-events: none;
-    z-index: 10;
-
-    transform: translateZ(0);
-    backface-visibility: hidden;
-}
-
+/* Part 4 - Board */
 #board {
     display: grid;
     background: transparent;
 }
 
-/* Todo 3 - Cell */
+
+/* Part 5 - Cell */
 .cell {
-    width: 40px;
-    height: 40px;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -37,7 +20,13 @@
     cursor: pointer;
     user-select: none;
     transition: background-color 0.2s;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.cell.invisible {
+    visibility: hidden;
+    pointer-events: none;
+    border: none !important;
+    background: transparent !important;
 }
 
 .cell.locked {
@@ -46,18 +35,14 @@
     text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
     cursor: default;
 }
-
 .cell:not(.locked) {
     cursor: pointer;
 }
-
 .cell:not(.filled):hover::after {
     content: attr(data-current-number);
     position: absolute;
     color: rgba(255, 255, 255, 0.3);
-    font-size: 20px;
 }
-
 .cell.locked:hover {
     transform: none !important;
 }
@@ -67,7 +52,6 @@
     z-index: 1;
     overflow: hidden;
 }
-
 .cell.highlighted::after {
     content: '';
     position: absolute;
@@ -83,10 +67,10 @@
 }
 
 .cell.conflict {
+    opacity: 0.8;
     animation: flashRed 0.3s 2 !important;
     z-index: 10 !important;
 }
-
 .cell.conflict.highlighted::after {
     display: none !important;
 }
@@ -95,7 +79,6 @@
     animation: flashFast 0.2s 1 !important;
     z-index: 10 !important;
 }
-
 .cell.solved.highlighted::after {
     display: none !important;
 }
@@ -103,35 +86,49 @@
 .cell.marked {
     background-image: url("Image/mark_white.png");
 }
-
 .cell.marked.highlighted {
     background-image: url("Image/mark_yellow.png");
 }
 
 
-/* Todo 4 - Number Botton */
+/* Part 6 - Number Botton */
+.main-button-container {
+    position: fixed;
+    bottom: 5%;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+    padding-left: 12px;
+    padding-right: 12px;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border: 2px solid transparent;
+    border-image: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, transparent 25%, transparent 75%, rgba(255,255,255,0.8) 100%) 1;
+    background-clip: padding-box;
+}
 .button-container {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin: 20px auto;
+    gap: 8px;
+    margin: 10px auto;
     width: fit-content;
-    padding: 8px;
+    padding: 4px;
     background: transparent;
 }
-
 .number-row {
     display: flex;
-    gap: 12px;
+    gap: 8px;
     justify-content: center;
 }
 
 .number-button {
-    width: 42px;
-    height: 42px;
-    min-width: 42px;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
     font-family: 'Tahoma', 'Microsoft Sans Serif', 'Arial', sans-serif;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     color: white;
     background: rgba(0, 0, 0, 0.4);
@@ -146,13 +143,11 @@
     position: relative;
     top: 0;
 }
-
 .number-button:hover {
     background: rgba(252, 252, 252, 0.25);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
 .number-button:active {
     transform: translateY(2px);
     box-shadow: none;
@@ -169,7 +164,6 @@
     position: relative;
     z-index: 1;
 }
-
 .number-button.selected::before {
     content: '';
     position: absolute;
@@ -187,7 +181,6 @@
     z-index: -1;
     opacity: 0.7;
 }
-
 .number-button.selected:hover {
     transform: scale(1.1) translateY(-2px);
     box-shadow:
@@ -200,12 +193,10 @@
     border-color: rgba(255, 0, 0, 0.6);
     transition: all 0.3s ease;
 }
-
 .number-button.restart-button:hover {
     background: rgba(255, 0, 0, 0.5);
     box-shadow: 0 0 8px rgba(255, 0, 0, 0.6);
 }
-
 .number-button.restart-button.game-over {
     background: rgba(255, 0, 0, 0.5);
     border-color: rgba(255, 0, 0, 0.6);
@@ -216,7 +207,6 @@
     z-index: 1;
     animation: none;
 }
-
 .number-button.restart-button.game-over::before {
     content: '';
     position: absolute;
@@ -233,7 +223,6 @@
     z-index: -1;
     opacity: 0.7;
 }
-
 .number-button.restart-button.game-over:hover {
     background: rgba(255, 0, 0, 0.8);
     transform: scale(1.1) translateY(-2px);
@@ -251,7 +240,6 @@
     background: rgba(0, 0, 0, 0.4);
     border: 2px solid rgba(255, 255, 255, 0.6);
 }
-
 .number-button.completed-number:hover {
     color: rgba(255, 255, 180, 1);
     text-shadow:
@@ -259,7 +247,6 @@
             0 0 15px rgba(255, 255, 200, 0.8);
     background: rgba(0, 0, 0, 0.3);
 }
-
 .number-button.completed-number.selected {
     color: rgba(0, 0, 0, 0.8) !important;
     background: rgba(255, 255, 255, 0.8) !important;
@@ -269,7 +256,6 @@
             0 0 10px 3px rgba(255, 215, 0, 0.6),
             0 0 20px 6px rgba(255, 255, 150, 0.4) !important;
 }
-
 .number-button.completed-number.selected:hover {
     transform: scale(1.1) translateY(-2px) !important;
     box-shadow:
@@ -278,9 +264,7 @@
 }
 
 
-
-
-/* Todo 5 - Frames */
+/* Part 7 - Frames */
 @keyframes pulseGlow {
     0%, 100% {
         transform: scale(0.95);

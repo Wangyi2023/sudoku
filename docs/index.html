@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 </head>
 <body>
+<!-- Main -->
 <div class="sidebar">
     <div class="sidebar-content">
         <div class="sidebar-header">
@@ -34,7 +35,7 @@
             </div>
 
             <div class="sidebar-button">
-                <button class="button" onclick="start_game()">Restart</button>
+                <button class="button" onclick="start()">Restart</button>
             </div>
 
             <div class="sidebar-button">
@@ -42,7 +43,7 @@
             </div>
 
             <div class="sidebar-button">
-                <button class="button" onclick="clear_all_marked_cells()">Clear Marked Cells</button>
+                <button class="button" onclick="clear_all_marked_cells()">Clear Mark</button>
             </div>
 
             <div class="sidebar-button">
@@ -50,19 +51,21 @@
             </div>
 
             <div class="sidebar-button">
-                <button class="button" onclick="create_input_box()">Change Difficulty</button>
+                <button class="button" onclick="create_input_box()">Difficulty</button>
                 <div id="difficulty-input-container" class="difficulty-input-container" style="display: none;">
                     <input
-                            type="number"
+                            type="text"
                             id="empty-cells-input"
-                            min="1"
-                            max="55"
-                            placeholder="Enter 1-55"
-                            aria-label="Number of empty cells (1-55)"
+                            placeholder="---"
+                            aria-label="Number of empty cells"
                             onkeydown="if(event.key === 'Enter') apply_difficulty()"
                     >
                     <button class="confirm-button" onclick="apply_difficulty()">Confirm</button>
                 </div>
+            </div>
+
+            <div class="sidebar-button">
+                <button class="button" onclick="toggle_game_mode()">Mode</button>
             </div>
 
             <div class="sidebar-button dropdown">
@@ -92,101 +95,48 @@
         </div>
     </div>
 </div>
-
 <div class="expand-button" onclick="toggle_sidebar()">▶</div>
-
 <div class="main-content">
     <div class="header">
-        <h1 onclick="start_game()">Sudoku</h1>
+        <h1 onclick="start()">Sudoku</h1>
     </div>
     <div class="board-wrapper">
         <div id="board"></div>
-        <div class="board-border"></div>
     </div>
 
-    <div class="button-container">
-        <div class="number-row">
-            <button class="number-button mark-button" id="mark-btn">
-                <img src="Image/flag_white.png" alt="Flag" id="mark-flag" class="flag-icon">
-            </button>
-            <button class="number-button" data-number="1">1</button>
-            <button class="number-button" data-number="2">2</button>
-            <button class="number-button" data-number="3">3</button>
-            <button class="number-button" data-number="4">4</button>
-            <button class="number-button" data-number="5">5</button>
+    <div class="main-button-container">
+        <div class="button-container">
+            <div class="number-row" id="number-row-first">
+                <!-- Number-Buttons loaded in scrip_main.js -->
+            </div>
+
+            <div class="number-row" id="number-row-second">
+                <!-- Number-Buttons loaded in scrip_main.js -->
+            </div>
         </div>
 
-        <div class="number-row">
-            <button class="number-button clear-mark-button" id="clear-mark-btn">
-                <img src="Image/flag_white_x.png" alt="Flag" id="clear-mark-flag" class="flag-icon">
-            </button>
-            <button class="number-button" data-number="6">6</button>
-            <button class="number-button" data-number="7">7</button>
-            <button class="number-button" data-number="8">8</button>
-            <button class="number-button" data-number="9">9</button>
-            <button class="number-button restart-button" id="restart-btn">⭮</button>
+        <div class="button-container">
+            <div class="number-row">
+                <button class="number-button mark-button" id="mark-btn">
+                    <img src="Image/flag_white.png" alt="Flag" id="mark-flag" class="flag-icon">
+                </button>
+                <button class="number-button clear-mark-button" id="clear-mark-btn">
+                    <img src="Image/flag_white_x.png" alt="Flag" id="clear-mark-flag" class="flag-icon">
+                </button>
+            </div>
+
+            <div class="number-row">
+                <button class="number-button restart-button" id="restart-btn">⭮</button>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- PreLoad-JavaScript-Document -->
+<script src="script_class_game_field.js"></script>
+<script src="script_main.js"></script>
 
-<script src="script.js"></script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const savedCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-        if (savedCollapsed) document.body.classList.add('sidebar-collapsed');
-
-        const savedBg = localStorage.getItem('background');
-        if (savedBg) {
-            document.documentElement.style.setProperty('--background-url', `url("Background_Collection/${savedBg}")`);
-        }
-    });
-
-    function toggle_sidebar() {
-        document.body.classList.toggle('sidebar-collapsed');
-        localStorage.setItem('sidebarCollapsed', document.body.classList.contains('sidebar-collapsed').toString());
-
-        close_all_sidebar_menus();
-    }
-
-    function close_all_sidebar_menus() {
-        document.getElementById('difficulty-input-container').style.display = 'none';
-        document.getElementById('background-menu').style.display = 'none';
-        shortcuts_enabled = true;
-    }
-
-    function toggle_background_dropdown() {
-        const menu = document.getElementById('background-menu');
-        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-        document.getElementById('difficulty-menu').style.display = 'none';
-    }
-
-    function toggle_guide() {
-        document.getElementById('guide-modal').style.display = 'block';
-    }
-
-    function hide_guide() {
-        document.getElementById('guide-modal').style.display = 'none';
-    }
-
-    function close_guide(event) {
-        const modal = document.getElementById('guide-modal');
-        const content = modal.querySelector('.modal-content');
-
-        if (!content.contains(event.target)) {
-            hide_guide();
-        }
-    }
-
-    document.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape') {
-            hide_guide();
-        }
-    });
-</script>
-
-
+<!-- PreLoad-Windows -->
 <div id="guide-modal" class="modal" onclick="close_guide(event)">
     <div class="modal-content">
         <span class="close-button" onclick="hide_guide()">&times;</span>
@@ -222,11 +172,19 @@
     </div>
 </div>
 
-
 <div id="end-message-modal" class="modal-end" onclick="hide_end_message()">
     <div class="modal-container" onclick="hide_end_message()">
         <div class="modal-content-end">
             <div id="end-message-content"></div>
+        </div>
+    </div>
+</div>
+
+<div id="game-modes-modal" class="modal" onclick="close_modes_list(event)">
+    <div class="modal-content">
+        <span class="close-button" onclick="hide_modes_list()">&times;</span>
+        <h2 style="text-align: center; margin-bottom: 20px;">Select Game Mode</h2>
+        <div id="game-modes-grid" class="game-modes-grid">
         </div>
     </div>
 </div>
