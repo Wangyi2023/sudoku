@@ -326,15 +326,21 @@ body.sidebar-collapsed .expand-button {
     margin-top: 25px;
 }
 .game-mode-button {
-    padding: 15px;
+    padding: 10px;
     background: rgba(0, 0, 0, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 8px;
     cursor: pointer;
-    text-align: center;
     font-weight: bold;
     font-size: 12px;
     transition: all 0.2s ease;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
 }
 .game-mode-button:hover {
     background: rgba(176, 244, 230, 0.2);

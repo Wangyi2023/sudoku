@@ -8,8 +8,8 @@ const GAME_COLLECTION = {
             [4, [0, 0]]
         ],
         MAIN_BOARD_SIZE: 4,
-        CELL_SIZE: 32,
-        FONT_SIZE: 16,
+        CELL_SIZE: 48,
+        FONT_SIZE: 24,
         GAME_FIELD_SIZE: 4,
         SUBGRID_SIZE: 2,
         DEFAULT_EMPTY_CELLS: 8,
@@ -24,8 +24,8 @@ const GAME_COLLECTION = {
             [9, [0, 0]]
         ],
         MAIN_BOARD_SIZE: 9,
-        CELL_SIZE: 32,
-        FONT_SIZE: 16,
+        CELL_SIZE: 40,
+        FONT_SIZE: 20,
         GAME_FIELD_SIZE: 9,
         SUBGRID_SIZE: 3,
         DEFAULT_EMPTY_CELLS: 45,
@@ -57,8 +57,8 @@ const GAME_COLLECTION = {
             [9, [6, 6]]
         ],
         MAIN_BOARD_SIZE: 15,
-        CELL_SIZE: 32,
-        FONT_SIZE: 16,
+        CELL_SIZE: 40,
+        FONT_SIZE: 20,
         GAME_FIELD_SIZE: 9,
         SUBGRID_SIZE: 3,
         DEFAULT_EMPTY_CELLS: 75,
@@ -74,8 +74,8 @@ const GAME_COLLECTION = {
             [9, [3, 3]]
         ],
         MAIN_BOARD_SIZE: 12,
-        CELL_SIZE: 32,
-        FONT_SIZE: 16,
+        CELL_SIZE: 40,
+        FONT_SIZE: 20,
         GAME_FIELD_SIZE: 9,
         SUBGRID_SIZE: 3,
         DEFAULT_EMPTY_CELLS: 60,
