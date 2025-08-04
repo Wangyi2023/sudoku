@@ -568,7 +568,7 @@ function render_borders() {
 
     for (const game_field of game_field_collection) {
         const [startR, startC] = [game_field.start_r, game_field.start_c];
-        const BORDER_OFFSET = 2;
+        const BORDER_OFFSET = 1;
         const BORDER_OFFSET_OUTLINE = 5;
 
         const border = document.createElement('div');
