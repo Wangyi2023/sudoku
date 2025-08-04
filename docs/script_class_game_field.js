@@ -31,21 +31,17 @@ class Game_Field {
         this.final_numbers_array = Array.from({ length: this.size }, (_, i) => i + 1);
     }
 
-    // Part 1 - Game Logic
+    // Todo 0 - Game Logic
     solve_sudoku() {
-        this.recursive_solve_sudoku();
-        this.lock_solution();
-    }
-    recursive_solve_sudoku() {
         for (let absR = this.start_r; absR < this.end_r; absR++) {
             for (let absC = this.start_c; absC < this.end_c; absC++) {
-                if (this.board[absR][absC].locked || this.board[absR][absC].value !== 0) {
+                if (this.board[absR][absC].value !== 0) {
                     continue;
                 }
                 for (const num of this.create_shuffled_array(this.final_numbers_array)) {
                     if (this.is_safe(absR, absC, num)) {
                         this.board[absR][absC].value = num;
-                        if (this.recursive_solve_sudoku()) {
+                        if (this.solve_sudoku()) {
                             return true;
                         }
                         this.board[absR][absC].value = 0;
@@ -55,13 +51,6 @@ class Game_Field {
             }
         }
         return true;
-    }
-    lock_solution() {
-        for (let absR = this.start_r; absR < this.end_r; absR++) {
-            for (let absC = this.start_c; absC < this.end_c; absC++) {
-                this.board[absR][absC].locked = true;
-            }
-        }
     }
     // Absolute - Relative Position
     to_absolute(relative_r, relative_c) {
