@@ -57,8 +57,8 @@ const GAME_COLLECTION = {
             [9, [6, 6]]
         ],
         MAIN_BOARD_SIZE: 15,
-        CELL_SIZE: 40,
-        FONT_SIZE: 20,
+        CELL_SIZE: 36,
+        FONT_SIZE: 18,
         GAME_FIELD_SIZE: 9,
         SUBGRID_SIZE: 3,
         DEFAULT_EMPTY_CELLS: 75,
@@ -69,6 +69,23 @@ const GAME_COLLECTION = {
         ICON: 'url("Icon/complex_class_A.png")',
     },
     'complex_class_B': {
+        GAME_FIELD_INFORMATION_COLLECTION: [
+            [9, [0, 0]],
+            [9, [3, 6]]
+        ],
+        MAIN_BOARD_SIZE: 15,
+        CELL_SIZE: 40,
+        FONT_SIZE: 20,
+        GAME_FIELD_SIZE: 9,
+        SUBGRID_SIZE: 3,
+        DEFAULT_EMPTY_CELLS: 75,
+        MIN_EMPTY_CELLS: 1,
+        MAX_EMPTY_CELLS: 90,
+        NUMBER_LIMIT: 16,
+        MAX_ATTEMPTS: 1000,
+        ICON: 'url("Icon/complex_class_B.png")',
+    },
+    'complex_class_C': {
         GAME_FIELD_INFORMATION_COLLECTION: [
             [9, [0, 0]],
             [9, [3, 3]]
@@ -83,7 +100,65 @@ const GAME_COLLECTION = {
         MAX_EMPTY_CELLS: 80,
         NUMBER_LIMIT: 14,
         MAX_ATTEMPTS: 1000,
-        ICON: 'url("Icon/complex_class_B.png")',
+        ICON: 'url("Icon/complex_class_C.png")',
+    },
+    'complex_class_D': {
+        GAME_FIELD_INFORMATION_COLLECTION: [
+            [9, [0, 0]],
+            [9, [6, 6]],
+            [9, [0, 12]],
+            [9, [6, 18]]
+        ],
+        MAIN_BOARD_SIZE: 27,
+        CELL_SIZE: 36,
+        FONT_SIZE: 18,
+        GAME_FIELD_SIZE: 9,
+        SUBGRID_SIZE: 3,
+        DEFAULT_EMPTY_CELLS: 150,
+        MIN_EMPTY_CELLS: 1,
+        MAX_EMPTY_CELLS: 175,
+        NUMBER_LIMIT: 33,
+        MAX_ATTEMPTS: 1000,
+        ICON: 'url("Icon/complex_class_D.png")',
+    },
+    'complex_class_E': {
+        GAME_FIELD_INFORMATION_COLLECTION: [
+            [9, [0, 6]],
+            [9, [3, 0]],
+            [9, [6, 6]],
+            [9, [3, 12]]
+        ],
+        MAIN_BOARD_SIZE: 21,
+        CELL_SIZE: 36,
+        FONT_SIZE: 18,
+        GAME_FIELD_SIZE: 9,
+        SUBGRID_SIZE: 3,
+        DEFAULT_EMPTY_CELLS: 125,
+        MIN_EMPTY_CELLS: 1,
+        MAX_EMPTY_CELLS: 150,
+        NUMBER_LIMIT: 30,
+        MAX_ATTEMPTS: 1000,
+        ICON: 'url("Icon/complex_class_E.png")',
+    },
+    'complex_class_F': {
+        GAME_FIELD_INFORMATION_COLLECTION: [
+            [9, [6, 6]],
+            [9, [0, 6]],
+            [9, [6, 0]],
+            [9, [12, 6]],
+            [9, [6, 12]]
+        ],
+        MAIN_BOARD_SIZE: 21,
+        CELL_SIZE: 28,
+        FONT_SIZE: 14,
+        GAME_FIELD_SIZE: 9,
+        SUBGRID_SIZE: 3,
+        DEFAULT_EMPTY_CELLS: 150,
+        MIN_EMPTY_CELLS: 1,
+        MAX_EMPTY_CELLS: 175,
+        NUMBER_LIMIT: 33,
+        MAX_ATTEMPTS: 1000,
+        ICON: 'url("Icon/complex_class_F.png")',
     },
     'complex_class_X': {
         GAME_FIELD_INFORMATION_COLLECTION: [
@@ -94,11 +169,11 @@ const GAME_COLLECTION = {
             [9, [12, 12]]
         ],
         MAIN_BOARD_SIZE: 21,
-        CELL_SIZE: 32,
-        FONT_SIZE: 16,
+        CELL_SIZE: 28,
+        FONT_SIZE: 14,
         GAME_FIELD_SIZE: 9,
         SUBGRID_SIZE: 3,
-        DEFAULT_EMPTY_CELLS: 200,
+        DEFAULT_EMPTY_CELLS: 180,
         MIN_EMPTY_CELLS: 1,
         MAX_EMPTY_CELLS: 240,
         NUMBER_LIMIT: 41,
@@ -207,9 +282,8 @@ function init_main_board(target_empty_cells) {
         game_field_collection.push(game_field);
     }
 
-    game_field_collection[0].solve_first_sudoku();
-    for (let i = 1; i < game_field_collection.length; i++) {
-        game_field_collection[i].solve_other_sudoku();
+    for (let i = 0; i < game_field_collection.length; i++) {
+        game_field_collection[i].solve_sudoku();
     }
 
     for (let i = 0; i < main_board_size; i++) {
@@ -217,7 +291,6 @@ function init_main_board(target_empty_cells) {
             let v = main_board[i][j].value;
             if (v !== 0) {
                 main_board_solution[i][j] = v;
-                main_board[i][j].locked = false;
                 main_board[i][j].visible = true;
             }
         }

@@ -32,11 +32,7 @@ class Game_Field {
     }
 
     // Part 1 - Game Logic
-    solve_other_sudoku() {
-        this.recursive_solve_sudoku();
-        this.lock_solution();
-    }
-    solve_first_sudoku() {
+    solve_sudoku() {
         this.recursive_solve_sudoku();
         this.lock_solution();
     }
