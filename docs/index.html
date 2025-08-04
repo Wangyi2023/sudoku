@@ -98,7 +98,9 @@
 <div class="expand-button" onclick="toggle_sidebar()">▶</div>
 <div class="main-content">
     <div class="header">
-        <h1 onclick="start()">Sudoku</h1>
+        <h1 onclick="start()">
+            <img src="Image/Title.png" alt="title" id="title-img">
+        </h1>
     </div>
     <div class="board-wrapper">
         <div id="board"></div>
@@ -181,11 +183,14 @@
 </div>
 
 <div id="game-modes-modal" class="modal" onclick="close_modes_list(event)">
-    <div class="modal-content">
+    <div class="modal-content modal-content-mode">
         <span class="close-button" onclick="hide_modes_list()">&times;</span>
         <h2 style="text-align: center; margin-bottom: 20px;">Select Game Mode</h2>
         <div id="game-modes-grid" class="game-modes-grid">
         </div>
+        <p style="text-align: center; margin-top: 20px; margin-bottom: 0; font-size: 12px; color: rgba(70, 70, 70, 1);">
+            Click outside the window to close it and cancel mode changes.
+        </p>
     </div>
 </div>
 

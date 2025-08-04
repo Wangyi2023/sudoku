@@ -9,7 +9,6 @@ html {
 body {
     zoom: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: rgba(255, 255, 255, 0.5);
     margin: 0;
     padding: 0;
     height: auto;
@@ -27,7 +26,7 @@ body::before {
     background-image: var(--background-url);
     background-size: cover;
     background-position: center;
-    opacity: 0.75;
+    opacity: 0.85;
     z-index: -1;
     pointer-events: none;
 }
@@ -45,12 +44,16 @@ body::before {
     width: 100%;
 }
 h1 {
-    width: 20%;
-    margin-left: 40%;
-    color: black;
-    font-size: 28px;
+    text-align: center;
+    margin-top: 12px;
+    margin-bottom: 8px;
+}
+h1 img {
+    width: 200px;
+    height: auto;
+    display: inline-block;
+    max-width: 100%;
     cursor: pointer;
-    user-select: none;
 }
 h2 {
 
@@ -284,6 +287,9 @@ body.sidebar-collapsed .expand-button {
     position: relative;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+.modal-content-mode {
+    max-width: 560px !important;
+}
 .modal-end {
     display: none;
     position: fixed;
@@ -321,8 +327,8 @@ body.sidebar-collapsed .expand-button {
 .game-modes-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    padding: 10px;
-    gap: 25px;
+    padding: 15px;
+    gap: 20px;
     margin-top: 25px;
 }
 .game-mode-button {

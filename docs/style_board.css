@@ -21,6 +21,7 @@
     user-select: none;
     transition: background-color 0.2s;
     border: 1px solid rgba(255, 255, 255, 0.3);
+    z-index: 5;
 }
 .cell.invisible {
     visibility: hidden;
@@ -124,14 +125,14 @@
 }
 
 .number-button {
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
     font-family: 'Tahoma', 'Microsoft Sans Serif', 'Arial', sans-serif;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
     color: white;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.7);
     border: 2px solid rgba(255, 255, 255, 0.6);
     border-radius: 12px;
     cursor: pointer;
@@ -144,7 +145,7 @@
     top: 0;
 }
 .number-button:hover {
-    background: rgba(252, 252, 252, 0.25);
+    background: rgba(252, 252, 252, 0.1);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
