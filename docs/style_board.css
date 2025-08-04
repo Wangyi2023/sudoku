@@ -3,6 +3,24 @@
     display: grid;
     background: transparent;
 }
+.game-field-border {
+    position: absolute;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-sizing: border-box;
+    z-index: 200;
+    pointer-events: none;
+}
+.game-field-border-outline {
+    position: absolute;
+    border: 5px solid rgba(255, 255, 255, 0.5);
+    box-sizing: border-box;
+    z-index: -2;
+    pointer-events: none;
+}
+.board-wrapper {
+    position: relative;
+}
+
 
 
 /* Part 5 - Cell */

@@ -46,9 +46,9 @@ const GAME_COLLECTION = {
         SUBGRID_SIZE: 4,
         DEFAULT_EMPTY_CELLS: 100,
         MIN_EMPTY_CELLS: 1,
-        MAX_EMPTY_CELLS: 125,
+        MAX_EMPTY_CELLS: 120,
         NUMBER_LIMIT: 16,
-        MAX_ATTEMPTS: 2000,
+        MAX_ATTEMPTS: 1000,
         ICON: 'url("Icon/standard_16x16.png")',
     },
     'complex_class_A': {
@@ -65,7 +65,7 @@ const GAME_COLLECTION = {
         MIN_EMPTY_CELLS: 1,
         MAX_EMPTY_CELLS: 90,
         NUMBER_LIMIT: 17,
-        MAX_ATTEMPTS: 2000,
+        MAX_ATTEMPTS: 1000,
         ICON: 'url("Icon/complex_class_A.png")',
     },
     'complex_class_B': {
@@ -80,9 +80,9 @@ const GAME_COLLECTION = {
         SUBGRID_SIZE: 3,
         DEFAULT_EMPTY_CELLS: 60,
         MIN_EMPTY_CELLS: 1,
-        MAX_EMPTY_CELLS: 75,
+        MAX_EMPTY_CELLS: 80,
         NUMBER_LIMIT: 14,
-        MAX_ATTEMPTS: 2000,
+        MAX_ATTEMPTS: 1000,
         ICON: 'url("Icon/complex_class_B.png")',
     },
     'complex_class_X': {
@@ -102,7 +102,7 @@ const GAME_COLLECTION = {
         MIN_EMPTY_CELLS: 1,
         MAX_EMPTY_CELLS: 240,
         NUMBER_LIMIT: 41,
-        MAX_ATTEMPTS: 4000,
+        MAX_ATTEMPTS: 2000,
         ICON: 'url("Icon/complex_class_X.png")',
     },
 }
@@ -172,6 +172,7 @@ function start() {
     init_main_board(target_empty_cells);
     create_board();
     render_board_colors();
+    render_borders();
 
     generate_number_buttons();
     update_number_completion();
@@ -561,6 +562,34 @@ function render_board_colors() {
         cell.style.backgroundColor = (boxRow + boxCol) % 2 === 0 ? dark : light;
     });
 }
+function render_borders() {
+    const boardWrapper = document.querySelector('.board-wrapper');
+    document.querySelectorAll('.game-field-border, .game-field-border-outline').forEach(e => e.remove());
+
+    for (const game_field of game_field_collection) {
+        const [startR, startC] = [game_field.start_r, game_field.start_c];
+        const BORDER_OFFSET = 2;
+        const BORDER_OFFSET_OUTLINE = 5;
+
+        const border = document.createElement('div');
+        border.classList.add('game-field-border');
+
+        border.style.width = `${cell_size * game_field_size + 2 * BORDER_OFFSET}px`;
+        border.style.height = `${cell_size * game_field_size + 2 * BORDER_OFFSET}px`;
+        border.style.left = `${startC * cell_size - BORDER_OFFSET}px`;
+        border.style.top = `${startR * cell_size - BORDER_OFFSET}px`;
+
+        const border_outline = document.createElement('div');
+        border_outline.classList.add('game-field-border-outline');
+        border_outline.style.width = `${cell_size * game_field_size + 2 * BORDER_OFFSET_OUTLINE}px`;
+        border_outline.style.height = `${cell_size * game_field_size + 2 * BORDER_OFFSET_OUTLINE}px`;
+        border_outline.style.left = `${startC * cell_size - BORDER_OFFSET_OUTLINE}px`;
+        border_outline.style.top = `${startR * cell_size - BORDER_OFFSET_OUTLINE}px`;
+
+        boardWrapper.appendChild(border);
+        boardWrapper.appendChild(border_outline)
+    }
+}
 function init_control_buttons() {
     const restartBtn = document.getElementById('restart-btn');
     restartBtn.addEventListener('click', function() {
@@ -801,7 +830,6 @@ function toggle_background_dropdown() {
 function toggle_guide() {
     document.getElementById('guide-modal').style.display = 'block';
 }
-// *
 function toggle_game_mode() {
     const modal = document.getElementById('game-modes-modal');
     modal.style.display = 'block';
@@ -837,13 +865,13 @@ function populate_game_mode() {
         button.textContent = mode.toString();
         button.onclick = function() {
             current_game_type = mode;
+            document.getElementById('empty-cells-input').value = GAME_COLLECTION[mode].DEFAULT_EMPTY_CELLS;
             hide_modes_list();
             start();
         };
         container.appendChild(button);
     });
 }
-
 function hide_guide() {
     document.getElementById('guide-modal').style.display = 'none';
 }
