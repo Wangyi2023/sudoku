@@ -473,6 +473,7 @@ function check_completion() {
     }
 }
 function clear_all() {
+    is_solving = false;
     if (game_over) {
         return;
     }
@@ -499,6 +500,7 @@ function clear_all() {
 
 }
 function clear_all_marked_cells() {
+    is_solving = false;
     if (!game_over) {
         for (let i = 0; i < main_board_size; i++) {
             for (let j = 0; j < main_board_size; j++) {
@@ -522,6 +524,7 @@ function clear_all_marked_cells() {
     update_mark_button_selection();
 }
 function solve() {
+    is_solving = false;
     let solutions = [];
     for (let i = 0; i < main_board_size; i++) {
         for (let j = 0; j < main_board_size; j++) {
@@ -732,6 +735,7 @@ function select_background(filename) {
     document.getElementById('background-menu').style.display = 'none';
 }
 function change_mark_status() {
+    is_solving = false;
     mark_enabled = !mark_enabled;
     update_mark_button_selection();
 }
