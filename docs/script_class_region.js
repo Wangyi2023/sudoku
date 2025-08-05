@@ -1,6 +1,6 @@
-// script_class_game_field.js - 02.08.2025
+// script_class_region.js - 02.08.2025
 
-class Game_Field {
+class Region {
     static CONFIG = {
         4: {
             SIZE : 4,
@@ -17,7 +17,7 @@ class Game_Field {
     };
 
     constructor({Main_Board, Size, Position} = {}) {
-        const config = Game_Field.CONFIG[Size] || Game_Field.CONFIG[9];
+        const config = Region.CONFIG[Size] || Region.CONFIG[9];
 
         this.size = config.SIZE;
         this.subgrid_size = config.SUBGRID_SIZE;
@@ -32,7 +32,7 @@ class Game_Field {
     }
 
     // Todo 0 - Game Logic
-    solve_sudoku() {
+    solve_region() {
         for (let absR = this.start_r; absR < this.end_r; absR++) {
             for (let absC = this.start_c; absC < this.end_c; absC++) {
                 if (this.board[absR][absC].value !== 0) {
@@ -41,7 +41,7 @@ class Game_Field {
                 for (const num of this.create_shuffled_array(this.final_numbers_array)) {
                     if (this.is_safe(absR, absC, num)) {
                         this.board[absR][absC].value = num;
-                        if (this.solve_sudoku()) {
+                        if (this.solve_region()) {
                             return true;
                         }
                         this.board[absR][absC].value = 0;
@@ -52,6 +52,7 @@ class Game_Field {
         }
         return true;
     }
+
     // Absolute - Relative Position
     to_absolute(relative_r, relative_c) {
         return [relative_r + this.start_r, relative_c + this.start_c];
@@ -63,6 +64,7 @@ class Game_Field {
         return absolute_r >= this.start_r && absolute_r < this.end_r
             && absolute_c >= this.start_c && absolute_c < this.end_c;
     }
+
     // Function List A - Begin
     is_safe(absR, absC, num) {
         if (!this.contains(absR, absC)) {
