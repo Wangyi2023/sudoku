@@ -972,10 +972,6 @@ function close_all_sidebar_menus() {
 // < Part 3 - Init / Load >
 
 // Todo 3.1 - Init Game / Load Monitor
-document.addEventListener('DOMContentLoaded', function() {
-    const savedCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-    if (savedCollapsed) document.body.classList.add('sidebar-collapsed');
-});
 document.addEventListener('keydown', handle_keypress);
 init_control_buttons();
 start();
