@@ -170,7 +170,7 @@
 }
 
 .number-button.selected {
-    color: rgba(0, 0, 0, 0.8) !important;
+    color: rgba(0, 0, 0, 1) !important;
     background: rgba(255, 255, 255, 0.8);
     border-color: rgba(255, 255, 150, 0.8) !important;
     text-shadow: none !important;
