@@ -546,9 +546,12 @@ function solve() {
 
     let random_index = Math.floor(Math.random() * solutions.length);
     const [r, c] = solutions[random_index];
+    const temp = current_number;
     current_number = main_board_solution[r][c];
-    update_number_buttons_selection();
     select_cell(r, c);
+    current_number = temp;
+    update_number_buttons_selection();
+    update_highlight();
 
     const solved_cell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
     if (solved_cell) {
