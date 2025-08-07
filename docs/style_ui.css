@@ -1,6 +1,6 @@
 /* Part 0 - Main */
 :root {
-    --background-url: url("Background_Collection/background_default.jpg");
+    --background-url: url("Background_Collection/default.jpg");
 }
 html {
     height: auto;

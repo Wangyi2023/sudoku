@@ -39,14 +39,6 @@
             </div>
 
             <div class="sidebar-button">
-                <button class="button" onclick="change_mark_status()">Mark</button>
-            </div>
-
-            <div class="sidebar-button">
-                <button class="button" onclick="clear_all_marked_cells()">Clear Mark</button>
-            </div>
-
-            <div class="sidebar-button">
                 <button class="button" onclick="clear_all()">Clear All</button>
             </div>
 
@@ -71,12 +63,10 @@
             <div class="sidebar-button dropdown">
                 <button class="button" onclick="toggle_background_dropdown()">Background</button>
                 <div id="background-menu" class="dropdown-menu">
-                    <div onclick="select_background('background_default.jpg')">Default</div>
+                    <div onclick="select_background('default.jpg')">Default</div>
                     <div onclick="select_background('01.jpg')">01</div>
                     <div onclick="select_background('02.jpg')">02</div>
                     <div onclick="select_background('03.jpg')">03</div>
-                    <div onclick="select_background('04.jpg')">04</div>
-                    <div onclick="select_background('05.jpg')">05</div>
                 </div>
             </div>
 
@@ -98,8 +88,8 @@
 <div class="expand-button" onclick="toggle_sidebar()">▶</div>
 <div class="main-content">
     <div class="header">
-        <h1 onclick="start()">
-            <img src="Image/sudoku_title.png" alt="title" id="title-img">
+        <h1>
+            <img src="Image/sudoku_title.png" onclick="start()" alt="title" id="title-img">
         </h1>
     </div>
     <div class="board-wrapper">

@@ -497,7 +497,6 @@ function clear_all() {
     update_number_completion();
     update_number_buttons_selection();
     update_mark_button_selection();
-
 }
 function clear_all_marked_cells() {
     is_solving = false;
@@ -976,9 +975,6 @@ function close_all_sidebar_menus() {
 document.addEventListener('DOMContentLoaded', function() {
     const savedCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
     if (savedCollapsed) document.body.classList.add('sidebar-collapsed');
-
-    const savedBg = localStorage.getItem('background');
-    if (savedBg) { document.documentElement.style.setProperty('--background-url', `url("Background_Collection/${savedBg}")`); }
 });
 document.addEventListener('keydown', handle_keypress);
 init_control_buttons();
