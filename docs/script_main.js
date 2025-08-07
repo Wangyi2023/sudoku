@@ -733,7 +733,6 @@ function apply_difficulty() {
 }
 function select_background(filename) {
     document.documentElement.style.setProperty('--background-url', `url("Background_Collection/${filename}")`);
-    localStorage.setItem('background', filename);
     document.getElementById('background-menu').style.display = 'none';
 }
 function change_mark_status() {
