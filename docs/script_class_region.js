@@ -2,6 +2,10 @@
 
 class Region {
     static CONFIG = {
+        1: {
+            SIZE : 1,
+            SUBGRID_SIZE: 1,
+        },
         4: {
             SIZE : 4,
             SUBGRID_SIZE: 2,

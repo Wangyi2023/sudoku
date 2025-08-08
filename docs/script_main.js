@@ -3,6 +3,22 @@
 // < Part 0 - Define Global-Variables >
 
 const GAME_COLLECTION = {
+    'standard_1x1': {
+        REGION_INFORMATION_COLLECTION: [
+            [1, [0, 0]]
+        ],
+        MAIN_BOARD_SIZE: 1,
+        CELL_SIZE: 48,
+        FONT_SIZE: 24,
+        REGION_SIZE: 1,
+        SUBGRID_SIZE: 1,
+        DEFAULT_EMPTY_CELLS: 1,
+        MIN_EMPTY_CELLS: 1,
+        MAX_EMPTY_CELLS: 1,
+        NUMBER_LIMIT: 1,
+        MAX_ATTEMPTS: 100,
+        ICON: 'url("Icon/standard_1x1.png")',
+    },
     'standard_4x4': {
         REGION_INFORMATION_COLLECTION: [
             [4, [0, 0]]
@@ -105,6 +121,24 @@ const GAME_COLLECTION = {
     'complex_class_D': {
         REGION_INFORMATION_COLLECTION: [
             [9, [0, 0]],
+            [9, [3, 6]],
+            [9, [6, 12]]
+        ],
+        MAIN_BOARD_SIZE: 21,
+        CELL_SIZE: 36,
+        FONT_SIZE: 18,
+        REGION_SIZE: 9,
+        SUBGRID_SIZE: 3,
+        DEFAULT_EMPTY_CELLS: 105,
+        MIN_EMPTY_CELLS: 1,
+        MAX_EMPTY_CELLS: 125,
+        NUMBER_LIMIT: 23,
+        MAX_ATTEMPTS: 1000,
+        ICON: 'url("Icon/complex_class_D.png")',
+    },
+    'complex_class_E': {
+        REGION_INFORMATION_COLLECTION: [
+            [9, [0, 0]],
             [9, [6, 6]],
             [9, [0, 12]],
             [9, [6, 18]]
@@ -119,9 +153,9 @@ const GAME_COLLECTION = {
         MAX_EMPTY_CELLS: 175,
         NUMBER_LIMIT: 33,
         MAX_ATTEMPTS: 1000,
-        ICON: 'url("Icon/complex_class_D.png")',
+        ICON: 'url("Icon/complex_class_E.png")',
     },
-    'complex_class_E': {
+    'complex_class_F': {
         REGION_INFORMATION_COLLECTION: [
             [9, [0, 6]],
             [9, [3, 0]],
@@ -138,9 +172,9 @@ const GAME_COLLECTION = {
         MAX_EMPTY_CELLS: 150,
         NUMBER_LIMIT: 30,
         MAX_ATTEMPTS: 1000,
-        ICON: 'url("Icon/complex_class_E.png")',
+        ICON: 'url("Icon/complex_class_F.png")',
     },
-    'complex_class_F': {
+    'complex_class_G': {
         REGION_INFORMATION_COLLECTION: [
             [9, [6, 6]],
             [9, [0, 6]],
@@ -158,7 +192,7 @@ const GAME_COLLECTION = {
         MAX_EMPTY_CELLS: 175,
         NUMBER_LIMIT: 33,
         MAX_ATTEMPTS: 1000,
-        ICON: 'url("Icon/complex_class_F.png")',
+        ICON: 'url("Icon/complex_class_G.png")',
     },
     'complex_class_X': {
         REGION_INFORMATION_COLLECTION: [
@@ -845,6 +879,8 @@ function send_notice(type, timeout = 4500) {
     if (now - last_notice_time < 600) { return; }
     last_notice_time = now;
 
+    if (current_game_type === 'standard_1x1') { type = '0.o'; }
+
     const container = document.getElementById('notice-container');
     const notice = document.createElement('div');
     const notice_text = document.createElement('div');
@@ -860,6 +896,10 @@ function send_notice(type, timeout = 4500) {
         case 'mistake':
             notice_text.innerHTML = "Error.<br> You made mistake in the puzzle.";
             notice_progress.style.backgroundColor = 'rgba(255, 20, 53, 1)';
+            break;
+        case '0.o':
+            notice_text.innerHTML = "0.o 难道他真是天才？";
+            notice_progress.style.backgroundColor = 'rgba(0, 150, 255, 1)';
             break;
         default:
             notice_text.innerHTML = "Notice.<br> Default Notice Content - 1024 0010 0024.";

@@ -97,9 +97,13 @@
 
 .cell.marked {
     background-image: url("Image/mark_white.png");
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 .cell.marked.highlighted {
     background-image: url("Image/mark_yellow.png");
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 
