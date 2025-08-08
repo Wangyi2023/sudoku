@@ -862,7 +862,7 @@ function send_notice(type, timeout = 4000) {
             notice_progress.style.backgroundColor = 'rgba(255, 20, 53, 1)';
             break;
         default:
-            notice_text.innerHTML = "Notice.<br> 1024 0010 0024.";
+            notice_text.innerHTML = "Notice.<br> Default Notice Content - 1024 0010 0024.";
             notice_progress.style.backgroundColor = 'rgba(0, 150, 255, 1)';
             break;
     }
