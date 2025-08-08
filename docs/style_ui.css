@@ -275,6 +275,7 @@ body.sidebar-collapsed .expand-button {
     color: #000;
     position: relative;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    user-select: none;
 }
 .modal-content-mode {
     max-width: 560px !important;
