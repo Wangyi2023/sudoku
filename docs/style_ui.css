@@ -165,7 +165,7 @@ body.sidebar-collapsed .expand-button {
 }
 
 .dropdown-menu {
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.6);
 }
 .background-row {
     width: 100%;
@@ -191,8 +191,8 @@ body.sidebar-collapsed .expand-button {
 .info-list {
     display: block;
     padding-top: 10px;
-    background-color: rgba(0,0,0,0.4);
-    color: rgba(255,255,255,0.8);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: rgba(255, 255, 255, 0.8);
     height: 90px;
     width: 100%;
     font-size: 14px;
@@ -241,8 +241,8 @@ body.sidebar-collapsed .expand-button {
 }
 #difficulty-input-container input,
 #difficulty-input-container .confirm-button {
-    background-color: rgba(0,0,0,0.4); !important;
-    color: rgba(255,255,255,0.8); !important;
+    background-color: rgba(0, 0, 0, 0.6); !important;
+    color: rgba(255, 255, 255, 0.8); !important;
 }
 #empty-cells-input::placeholder {
     color: rgba(255,255,255,0.8);
