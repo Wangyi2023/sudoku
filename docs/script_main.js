@@ -879,8 +879,6 @@ function send_notice(type, timeout = 4500) {
     if (now - last_notice_time < 600) { return; }
     last_notice_time = now;
 
-    if (current_game_type === 'standard_1x1') { type = '0.o'; }
-
     const container = document.getElementById('notice-container');
     const notice = document.createElement('div');
     const notice_text = document.createElement('div');
@@ -888,6 +886,7 @@ function send_notice(type, timeout = 4500) {
     notice.classList.add('notice');
     notice_text.classList.add('notice-text');
     notice_progress.classList.add('notice-progress');
+    if (current_game_type === 'standard_1x1') { type = '0.o'; }
     switch (type) {
         case 'congrats':
             notice_text.innerHTML = "Congratulations.<br> You've successfully solved the puzzle.";
