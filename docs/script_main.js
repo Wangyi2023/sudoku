@@ -840,7 +840,7 @@ function update_timer() {
     }
 }
 // Todo 2.4 - Message / Shortcuts
-function send_notice(type, timeout = 4000) {
+function send_notice(type, timeout = 4500) {
     const now = Date.now();
     if (now - last_notice_time < 600) { return; }
     last_notice_time = now;
