@@ -12,38 +12,40 @@
 <!-- Main -->
 <div class="sidebar">
     <div class="sidebar-content">
-        <div class="sidebar-header">
+        <div class="sidebar-header" onclick="toggle_sidebar()">
             <span id="control-panel-title">Control Panel</span>
-            <div class="collapse-handle" onclick="toggle_sidebar()">◀</div>
+            <div class="collapse-handle">◀</div>
         </div>
 
         <div class="controls">
-            <div class="sidebar-button info-box">
-                <div class="info-title">Information</div>
-                <div class="info-line">
-                    <span class="info-label">Status</span>
-                    <span id="status-info" class="info-value"> --- </span>
-                </div>
-                <div class="info-line">
-                    <span class="info-label">Time</span>
-                    <span id="time-info" class="info-value"> --- </span>
-                </div>
-                <div class="info-line">
-                    <span class="info-label">Difficulty</span>
-                    <span id="difficulty-info" class="info-value"> --- </span>
+            <div class="sidebar-button">
+                <div id="information-btn" class="button selected" onclick="toggle_information()">Information</div>
+                <div id="information-list" class="sidebar-button info-list" style="display: block">
+                    <div class="info-line">
+                        <span class="info-label">Status</span>
+                        <span id="status-info" class="info-value"> --- </span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-label">Time</span>
+                        <span id="time-info" class="info-value"> --- </span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-label">Difficulty</span>
+                        <span id="difficulty-info" class="info-value"> --- </span>
+                    </div>
                 </div>
             </div>
 
             <div class="sidebar-button">
-                <button class="button" onclick="start()">Restart</button>
+                <div id="start-btn" class="button" onclick="start()">Restart</div>
             </div>
 
             <div class="sidebar-button">
-                <button class="button" onclick="clear_all()">Clear All</button>
+                <div id="clear-all-btn" class="button" onclick="clear_all()">Clear All</div>
             </div>
 
             <div class="sidebar-button">
-                <button class="button" onclick="create_input_box()">Difficulty</button>
+                <div id="difficulty-btn" class="button" onclick="create_input_box()">Difficulty</div>
                 <div id="difficulty-input-container" class="difficulty-input-container" style="display: none;">
                     <input
                             type="text"
@@ -52,34 +54,38 @@
                             aria-label="Number of empty cells"
                             onkeydown="if(event.key === 'Enter') apply_difficulty()"
                     >
-                    <button class="confirm-button" onclick="apply_difficulty()">Confirm</button>
+                    <button class="confirm-button" onclick="apply_difficulty()">↩</button>
                 </div>
             </div>
 
             <div class="sidebar-button">
-                <button class="button" onclick="toggle_game_mode()">Mode</button>
+                <div id="mode-btn" class="button" onclick="toggle_game_mode()">Mode</div>
             </div>
 
-            <div class="sidebar-button dropdown">
-                <button class="button" onclick="toggle_background_dropdown()">Background</button>
+            <div class="sidebar-button">
+                <div id="background-btn" class="button" onclick="toggle_background_dropdown()">Background</div>
                 <div id="background-menu" class="dropdown-menu">
-                    <div onclick="select_background('default.jpg')">Default</div>
-                    <div onclick="select_background('01.jpg')">01</div>
-                    <div onclick="select_background('02.jpg')">02</div>
-                    <div onclick="select_background('03.jpg')">03</div>
+                    <div class="background-row" >
+                        <div class="background-option" onclick="select_background('default.jpg')">Default</div>
+                        <div class="background-option" onclick="select_background('01.jpg')">01</div>
+                    </div>
+                    <div class="background-row" >
+                        <div class="background-option" onclick="select_background('02.jpg')">02</div>
+                        <div class="background-option" onclick="select_background('03.jpg')">03</div>
+                    </div>
                 </div>
             </div>
 
             <div class="sidebar-button">
-                <button class="button" onclick="solve()">Solve</button>
+                <div id="solve-btn" class="button" onclick="solve()">Solve</div>
             </div>
 
             <div class="sidebar-button">
-                <button class="button" onclick="solve_all()">Solve All</button>
+                <div id="solve-all-btn" class="button" onclick="solve_all()">Solve All</div>
             </div>
 
             <div class="sidebar-button">
-                <button class="button" onclick="toggle_guide()">Guide</button>
+                <div id="guide-btn" class="button" onclick="toggle_guide()">Guide</div>
             </div>
 
         </div>
@@ -136,7 +142,7 @@
             <div style="flex: 1; text-align: left;">
                 <h2>游戏说明</h2>
                 <p>
-                    欢迎来到数独 :D<br><br>
+                    欢迎来到数独 :D<br>
                     请使用桌面端的 Microsoft-Edge, FireFox, Google-Chrome 浏览器打开此页面，上述浏览器经过桌面端测试没有不兼容状况。移动端页面暂未完成，也别期待，因为我不会做 <br>
                     玩家需要先选择数字，再选择数字填入的位置。此游戏更新了标记功能，打开后会对所有填入的数字进行标记，若路径不成功可通过清除标记回溯。<br>
                     此游戏创建的棋盘必定有唯一解，为确保创建棋盘耗时不会太久，我设置了空格上限。<br>
@@ -151,7 +157,7 @@
             <div style="flex: 1; text-align: left;">
                 <h2>Game Guide</h2>
                 <p>
-                    Welcome to Sudoku :D<br><br>
+                    Welcome to Sudoku :D<br>
                     Please use a desktop browser like Microsoft Edge, Firefox, or Google Chrome to open this page. These browsers have been tested on desktop with no compatibility issues. A mobile version isn’t available, and don’t expect it because I have no idea how to make one.<br>
                     To play, first select a number, then select the cell where you want to place it. This game includes a mark mode: when enabled, every number you place will be automatically marked. If the current path leads to a dead end, you can clear marks to backtrack.<br>
                     Every generated Sudoku board has a unique solution.<br>
@@ -169,13 +175,7 @@
     </div>
 </div>
 
-<div id="end-message-modal" class="modal-end" onclick="hide_end_message()">
-    <div class="modal-container" onclick="hide_end_message()">
-        <div class="modal-content-end">
-            <div id="end-message-content"></div>
-        </div>
-    </div>
-</div>
+<div id="notice-container" class="notice-container"></div>
 
 <div id="game-modes-modal" class="modal" onclick="close_modes_list(event)">
     <div class="modal-content modal-content-mode">

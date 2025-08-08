@@ -51,10 +51,6 @@
     color: white !important;
     font-weight: bold;
     text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
-    cursor: default;
-}
-.cell:not(.locked) {
-    cursor: pointer;
 }
 .cell:not(.filled):hover::after {
     content: attr(data-current-number);
@@ -322,10 +318,22 @@
     }
     50% {
         transform: scale(1.02);
-        background-color: rgba(255, 255, 100, 0.4);
+        background-color: rgba(255, 255, 100, 0.3);
         border-color: rgba(255, 255, 150, 0.8);
         box-shadow:
                 inset 0 0 15px rgba(255, 255, 0, 0.6),
                 0 0 15px rgba(255, 255, 150, 0.8);
+    }
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(100%); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeOutUp {
+    to {
+        opacity: 0;
+        transform: translateY(-40px);
     }
 }

@@ -10,7 +10,7 @@ const GAME_COLLECTION = {
         MAIN_BOARD_SIZE: 4,
         CELL_SIZE: 48,
         FONT_SIZE: 24,
-        REGION: 4,
+        REGION_SIZE: 4,
         SUBGRID_SIZE: 2,
         DEFAULT_EMPTY_CELLS: 8,
         MIN_EMPTY_CELLS: 1,
@@ -190,6 +190,7 @@ let main_board_solution = [];
 let count_array =[];
 
 let start_time = null;
+let last_notice_time = null;
 let timer_interval = null;
 
 let main_board_size
@@ -254,11 +255,13 @@ function start() {
     update_mark_button_selection();
 
     start_time = Date.now();
+    last_notice_time = 0;
     timer_interval = setInterval(update_timer, 100);
     update_game_information();
     setup_difficulty_input();
     document.getElementById("status-info").textContent = "In Progress";
     document.getElementById('restart-btn').classList.remove('game-over');
+    close_all_sidebar_menus();
 }
 function init_main_board(target_empty_cells) {
     main_board = Array(main_board_size).fill(null).map(() =>
@@ -466,7 +469,7 @@ function check_completion() {
         current_number = 0;
         update_number_buttons_selection();
         update_highlight();
-        show_end_message(true);
+        send_notice('congrats');
 
         const restart_button = document.getElementById('restart-btn');
         restart_button.classList.add('game-over');
@@ -533,7 +536,7 @@ function solve() {
             if (main_board[i][j].value === 0) {
                 solutions.push([i, j]);
             } else if (main_board[i][j].value !== main_board_solution[i][j]) {
-                show_end_message(false);
+                send_notice('mistake');
                 return false;
             }
         }
@@ -567,10 +570,12 @@ async function solve_all() {
         return;
     }
     is_solving = true;
+    document.getElementById('solve-all-btn').classList.add('selected');
     while (!game_over && is_solving) {
         is_solving = solve();
         await new Promise(resolve => setTimeout(resolve, 50));
     }
+    document.getElementById('solve-all-btn').classList.remove('selected');
 }
 
 
@@ -614,12 +619,15 @@ function formatNumber(n) {
 }
 function create_input_box() {
     const container = document.getElementById('difficulty-input-container');
-    const isOpening = container.style.display !== 'flex';
+    if (container.style.display === 'flex') {
+        container.style.display = 'none';
+        shortcuts_enabled = true;
+        document.getElementById('difficulty-btn').classList.remove('selected');
+    } else {
+        container.style.display = 'flex';
+        shortcuts_enabled = false;
+        document.getElementById('difficulty-btn').classList.add('selected');
 
-    container.style.display = isOpening ? 'flex' : 'none';
-    shortcuts_enabled = !isOpening;
-
-    if (isOpening) {
         const input = document.getElementById('empty-cells-input');
         input.focus();
         input.value = '';
@@ -728,12 +736,14 @@ function apply_difficulty() {
     if (isNaN(empty_cells) || empty_cells < min_empty_cells || empty_cells > max_empty_cells) {
         empty_cells_input.value = default_empty_cells;
     }
+    document.getElementById('difficulty-btn').classList.remove('selected');
     close_all_sidebar_menus();
     start();
 }
 function select_background(filename) {
     document.documentElement.style.setProperty('--background-url', `url("Background_Collection/${filename}")`);
     document.getElementById('background-menu').style.display = 'none';
+    document.getElementById('background-btn').classList.remove('selected');
 }
 function change_mark_status() {
     is_solving = false;
@@ -830,34 +840,52 @@ function update_timer() {
     }
 }
 // Todo 2.4 - Message / Shortcuts
-function show_end_message(solved) {
-    const content = document.getElementById('end-message-content');
+function send_notice(type, timeout = 4000) {
+    const now = Date.now();
+    if (now - last_notice_time < 600) { return; }
+    last_notice_time = now;
 
-    content.innerHTML = '';
-
-    const title = document.createElement('h2');
-    title.style.textAlign = 'center';
-    title.style.marginBottom = '-5px';
-    title.textContent = solved ? 'Congratulations' : 'Error';
-
-    const message = document.createElement('p');
-    message.style.textAlign = 'center';
-    message.style.fontSize = '16px';
-    message.innerHTML = solved
-        ? "You've successfully solved the Sudoku puzzle.<br> Click anywhere to close this message."
-        : "You made a mistake in the puzzle, so that it can’t be solved anymore.<br> Click anywhere to close this message.";
-
-    content.appendChild(title);
-    content.appendChild(message);
-
-    document.getElementById('end-message-modal').style.display = 'block';
-}
-function hide_end_message() {
-    document.getElementById('end-message-modal').style.display = 'none';
+    const container = document.getElementById('notice-container');
+    const notice = document.createElement('div');
+    const notice_text = document.createElement('div');
+    const notice_progress = document.createElement('div');
+    notice.classList.add('notice');
+    notice_text.classList.add('notice-text');
+    notice_progress.classList.add('notice-progress');
+    switch (type) {
+        case 'congrats':
+            notice_text.innerHTML = "Congratulations.<br> You've successfully solved the puzzle.";
+            notice_progress.style.backgroundColor = 'rgba(0, 220, 80, 1)';
+            break;
+        case 'mistake':
+            notice_text.innerHTML = "Error.<br> You made mistake in the puzzle.";
+            notice_progress.style.backgroundColor = 'rgba(255, 20, 53, 1)';
+            break;
+        default:
+            notice_text.innerHTML = "Notice.<br> 1024 0010 0024.";
+            notice_progress.style.backgroundColor = 'rgba(0, 150, 255, 1)';
+            break;
+    }
+    notice_progress.style.animation = `progressShrink ${timeout}ms linear forwards`;
+    notice.appendChild(notice_text);
+    notice.appendChild(notice_progress);
+    notice.onclick = () => {
+        if (container.contains(notice)) {
+            container.removeChild(notice);
+        }
+    };
+    notice.style.animation = 'slideInRight 0.3s ease forwards';
+    container.appendChild(notice);
+    setTimeout(() => {
+        notice.style.animation = 'fadeOutUp 0.3s ease forwards';
+        setTimeout(() => {
+            if (container.contains(notice)) {
+                container.removeChild(notice);
+            }
+        }, 300);
+    }, timeout);
 }
 function handle_keypress(event) {
-    hide_end_message();
-
     const key = event.key.toLowerCase();
     if (key === 'escape') {
         hide_guide();
@@ -903,19 +931,38 @@ function toggle_sidebar() {
 }
 function toggle_background_dropdown() {
     const menu = document.getElementById('background-menu');
-    menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    if (menu.style.display === 'block') {
+        menu.style.display = 'none';
+        document.getElementById('background-btn').classList.remove('selected');
+    } else {
+        menu.style.display = "block";
+        document.getElementById('background-btn').classList.add('selected');
+    }
+}
+function toggle_information() {
+    const info_list = document.getElementById('information-list');
+    if (info_list.style.display === 'block') {
+        info_list.style.display = 'none';
+        document.getElementById('information-btn').classList.remove('selected');
+    } else {
+        info_list.style.display = 'block';
+        document.getElementById('information-btn').classList.add('selected');
+    }
 }
 function toggle_guide() {
     document.getElementById('guide-modal').style.display = 'block';
+    document.getElementById('guide-btn').classList.add('selected');
 }
 function toggle_game_mode() {
     const modal = document.getElementById('game-modes-modal');
     modal.style.display = 'block';
     populate_game_mode();
+    document.getElementById('mode-btn').classList.add('selected');
     shortcuts_enabled = false;
 }
 function hide_modes_list() {
     document.getElementById('game-modes-modal').style.display = 'none';
+    document.getElementById('mode-btn').classList.remove('selected');
     shortcuts_enabled = true;
 }
 function close_modes_list() {
@@ -952,6 +999,7 @@ function populate_game_mode() {
 }
 function hide_guide() {
     document.getElementById('guide-modal').style.display = 'none';
+    document.getElementById('guide-btn').classList.remove('selected');
 }
 function close_guide(event) {
     const modal = document.getElementById('guide-modal');
@@ -962,7 +1010,9 @@ function close_guide(event) {
 }
 function close_all_sidebar_menus() {
     document.getElementById('difficulty-input-container').style.display = 'none';
+    document.getElementById('difficulty-btn').classList.remove('selected');
     document.getElementById('background-menu').style.display = 'none';
+    document.getElementById('background-btn').classList.remove('selected');
     shortcuts_enabled = true;
 }
 
