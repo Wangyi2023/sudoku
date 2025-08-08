@@ -895,12 +895,10 @@ function handle_keypress(event) {
         shortcuts_enabled = true;
         return;
     }
-
     if (key === 'c') {
         toggle_sidebar();
         return;
     }
-
     if (!shortcuts_enabled) return;
 
     if (current_number !== 0) {
