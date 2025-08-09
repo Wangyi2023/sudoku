@@ -294,7 +294,6 @@ function start() {
     update_game_information();
     setup_difficulty_input();
     document.getElementById("status-info").textContent = "In Progress";
-    document.getElementById('restart-btn').classList.remove('game-over');
     close_all_sidebar_menus();
 }
 function init_main_board(target_empty_cells) {
@@ -446,6 +445,11 @@ function select_cell(row, col) {
         update_number_completion();
     }
 }
+function select_number(n) {
+    current_number = current_number === n ? 0 : n;
+    update_number_buttons_selection()
+    update_highlight();
+}
 // Todo 1.3 - Algorithm for UI
 function find_next_uncompleted_number() {
     for (let next = current_number + 1; next <= region_size; next++) {
@@ -504,9 +508,6 @@ function check_completion() {
         update_number_buttons_selection();
         update_highlight();
         send_notice('congrats');
-
-        const restart_button = document.getElementById('restart-btn');
-        restart_button.classList.add('game-over');
     }
 }
 function clear_all() {
@@ -710,50 +711,51 @@ function render_borders() {
         boardWrapper.appendChild(border_outline)
     }
 }
-function init_control_buttons() {
-    const restartBtn = document.getElementById('restart-btn');
-    restartBtn.addEventListener('click', function() {
-        start();
-    });
-
-    const markBtn = document.getElementById('mark-btn');
-    markBtn.addEventListener('click', change_mark_status);
-
-    const clearMarkBtn = document.getElementById('clear-mark-btn');
-    clearMarkBtn.addEventListener('click', clear_all_marked_cells)
-}
 function generate_number_buttons() {
     const row_first = document.getElementById('number-row-first');
     const row_second = document.getElementById('number-row-second');
+    const column_first = document.getElementById('number-column-first');
+    const column_second = document.getElementById('number-column-second');
 
     row_first.innerHTML = '';
     row_second.innerHTML = '';
+    column_first.innerHTML = '';
+    column_second.innerHTML = '';
 
     const total = region_size;
     const half = Math.ceil(total / 2);
 
+    if ((total & 1) === 1) {
+        const placeholder = document.createElement('button');
+        placeholder.className = 'number-button placeholder';
+        column_second.appendChild(placeholder);
+    }
     for (let i = 1; i <= total; i++) {
         const button = document.createElement('button');
         button.className = 'number-button';
         button.dataset.number = i.toString();
         button.textContent = formatNumber(i);
 
+        const button_vertical = document.createElement('button');
+        button_vertical.className = 'number-button';
+        button_vertical.dataset.number = i.toString();
+        button_vertical.textContent = formatNumber(i);
+
         button.addEventListener('click', function () {
             const num = parseInt(this.dataset.number);
-            if (current_number === num) {
-                current_number = 0;
-                this.classList.remove('selected');
-            } else {
-                current_number = num;
-                update_number_buttons_selection();
-            }
-            update_highlight();
+            select_number(num);
+        });
+        button_vertical.addEventListener('click', function () {
+            const num = parseInt(this.dataset.number);
+            select_number(num);
         });
 
         if (i <= half) {
             row_first.appendChild(button);
+            column_first.appendChild(button_vertical);
         } else {
             row_second.appendChild(button);
+            column_second.appendChild(button_vertical);
         }
     }
 }
@@ -784,6 +786,19 @@ function change_mark_status() {
     mark_enabled = !mark_enabled;
     update_mark_button_selection();
 }
+function toggle_container() {
+    const horizontal = document.getElementById('main-button-container');
+    const vertical = document.getElementById('main-button-container-vertical');
+
+    if (horizontal.style.display !== 'none') {
+        horizontal.style.display = 'none';
+        vertical.style.display = 'flex';
+    } else {
+        horizontal.style.display = 'flex';
+        vertical.style.display = 'none';
+    }
+}
+
 // Todo 2.3 - Update Game Information
 function update_cell_display(row, col) {
     const cell_element = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
@@ -855,12 +870,16 @@ function update_number_buttons_selection() {
 function update_mark_button_selection() {
     if (mark_enabled) {
         document.getElementById('mark-btn').classList.add('selected');
-        const flagIcon = document.getElementById('mark-flag');
-        flagIcon.src = "Image/flag_black.png";
+        document.getElementById('mark-btn-vertical').classList.add('selected')
+
+        document.getElementById('mark-flag').src = "Image/flag_black.png";
+        document.getElementById('mark-flag-vertical').src = "Image/flag_black.png";
     } else {
         document.getElementById('mark-btn').classList.remove('selected');
-        const flagIcon = document.getElementById('mark-flag');
-        flagIcon.src = "Image/flag_white.png";
+        document.getElementById('mark-btn-vertical').classList.remove('selected')
+
+        document.getElementById('mark-flag').src = "Image/flag_white.png";
+        document.getElementById('mark-flag-vertical').src = "Image/flag_white.png";
     }
 }
 function update_game_information() {
@@ -943,14 +962,12 @@ function handle_keypress(event) {
     if (current_number !== 0) {
         switch (key) {
             case 'arrowleft':
-                current_number = find_previous_number();
+                select_number(find_previous_number());
                 break;
             case 'arrowright':
-                current_number = find_next_number();
+                select_number(find_next_number());
                 break;
         }
-        update_number_buttons_selection();
-        update_highlight();
     }
 
     switch(key) {
@@ -1059,5 +1076,4 @@ function close_all_sidebar_menus() {
 
 // Todo 3.1 - Init Game / Load Monitor
 document.addEventListener('keydown', handle_keypress);
-init_control_buttons();
 start();

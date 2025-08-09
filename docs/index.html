@@ -102,7 +102,7 @@
         <div id="board"></div>
     </div>
 
-    <div class="main-button-container">
+    <div class="main-button-container" id="main-button-container">
         <div class="button-container">
             <div class="number-row" id="number-row-first">
                 <!-- Number-Buttons loaded in scrip_main.js -->
@@ -116,15 +116,48 @@
         <div class="button-container">
             <div class="number-row">
                 <button class="number-button mark-button" id="mark-btn">
-                    <img src="Image/flag_white.png" alt="Flag" id="mark-flag" class="flag-icon">
+                    <img src="Image/flag_white.png" alt="Flag" id="mark-flag" class="icon" onclick="change_mark_status()">
                 </button>
                 <button class="number-button clear-mark-button" id="clear-mark-btn">
-                    <img src="Image/flag_white_x.png" alt="Flag" id="clear-mark-flag" class="flag-icon">
+                    <img src="Image/flag_white_x.png" alt="Flag" id="clear-mark-flag" class="icon" onclick="clear_all_marked_cells()">
                 </button>
             </div>
 
             <div class="number-row">
-                <button class="number-button restart-button" id="restart-btn">⭮</button>
+                <button class="number-button restart-button" id="restart-btn" onclick="start()">⭮</button>
+                <button class="number-button clear-mark-button" id="toggle-container-btn">
+                    <img src="Image/arrow_right.png" alt="Flag" id="toggle-icon" class="icon" onclick="toggle_container()">
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-button-container-vertical" id="main-button-container-vertical" style="display: none;">
+        <div class="button-container-vertical">
+            <div class="number-column" id="number-column-first">
+                <!-- Number-Buttons loaded in scrip_main.js -->
+            </div>
+
+            <div class="number-column" id="number-column-second">
+                <!-- Number-Buttons loaded in scrip_main.js -->
+            </div>
+        </div>
+
+        <div class="button-container-vertical">
+            <div class="number-column">
+                <button class="number-button mark-button" id="mark-btn-vertical">
+                    <img src="Image/flag_white.png" alt="Flag" id="mark-flag-vertical" class="icon" onclick="change_mark_status()">
+                </button>
+                <button class="number-button restart-button" id="restart-btn-vertical" onclick="start()">⭮</button>
+            </div>
+
+            <div class="number-column">
+                <button class="number-button clear-mark-button" id="clear-mark-btn-vertical">
+                    <img src="Image/flag_white_x.png" alt="Flag" id="clear-mark-flag-vertical" class="icon" onclick="clear_all_marked_cells()">
+                </button>
+                <button class="number-button clear-mark-button" id="toggle-container-btn-vertical">
+                    <img src="Image/arrow_down.png" alt="Flag" id="toggle-icon-vertical" class="icon" onclick="toggle_container()">
+                </button>
             </div>
         </div>
     </div>

@@ -139,6 +139,41 @@
     justify-content: center;
 }
 
+.main-button-container-vertical {
+    position: fixed;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border: 2px solid transparent;
+    border-image: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, transparent 25%, transparent 75%, rgba(255,255,255,0.8) 100%) 1;
+    background-clip: padding-box;
+    flex-direction: column;
+}
+.button-container-vertical {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    margin: auto 10px;
+    width: fit-content;
+    padding: 4px;
+    background: transparent;
+}
+.number-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+
+
 .number-button {
     width: 44px;
     height: 44px;
@@ -161,11 +196,11 @@
 }
 .number-button:hover {
     background: rgba(252, 252, 252, 0.1);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 .number-button:active {
-    transform: translateY(2px);
+    transform: translateY(1px);
     box-shadow: none;
 }
 
@@ -207,44 +242,11 @@
 .number-button.restart-button {
     background: rgba(255, 0, 0, 0.3);
     border-color: rgba(255, 0, 0, 0.6);
-    transition: all 0.3s ease;
+    transition: all 0.1s ease;
 }
 .number-button.restart-button:hover {
     background: rgba(255, 0, 0, 0.5);
     box-shadow: 0 0 8px rgba(255, 0, 0, 0.6);
-}
-.number-button.restart-button.game-over {
-    background: rgba(255, 0, 0, 0.5);
-    border-color: rgba(255, 0, 0, 0.6);
-    box-shadow:
-            0 0 10px 3px rgba(255, 0, 0, 0.6),
-            0 0 20px 6px rgba(255, 100, 100, 0.4);
-    position: relative;
-    z-index: 1;
-    animation: none;
-}
-.number-button.restart-button.game-over::before {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: -8px;
-    right: -8px;
-    bottom: -8px;
-    border-radius: 16px;
-    background: radial-gradient(
-            circle at center,
-            rgba(255, 100, 100, 0.8) 0%,
-            rgba(255, 100, 100, 0) 70%
-    );
-    z-index: -1;
-    opacity: 0.1;
-}
-.number-button.restart-button.game-over:hover {
-    background: rgba(255, 0, 0, 0.75);
-    transform: scale(1.05) translateY(-2px);
-    box-shadow:
-            0 0 12px 4px rgba(255, 0, 0, 0.7),
-            0 0 24px 8px rgba(255, 150, 150, 0.5);
 }
 
 .number-button.completed-number {
@@ -279,6 +281,11 @@
             0 0 24px 8px rgba(255, 255, 150, 0.5) !important;
 }
 
+.number-button.placeholder {
+    visibility: hidden;
+    pointer-events: none;
+    height: 20px;
+}
 
 /* Part 7 - Frames */
 @keyframes pulseGlow {
