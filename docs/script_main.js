@@ -819,20 +819,14 @@ function update_cell_display(row, col) {
 
     if (cell.marked) {
         cell_element.classList.add('marked');
-    } else {
-        cell_element.classList.remove('marked');
     }
 
     if (cell.value !== 0 && cell.value === current_number) {
         cell_element.classList.add('selected');
-    } else {
-        cell_element.classList.remove('selected');
     }
 
-    if (cell.visible) {
-        cell_element.classList.remove('invisible')
-    } else {
-        cell_element.classList.add('invisible');
+    if (!cell.visible) {
+        cell_element.classList.add('invisible')
     }
 }
 function update_number_completion() {
