@@ -501,6 +501,7 @@ function check_completion() {
     const is_complete = count_array.slice(1).every(count => count >= number_limit);
     if (is_complete) {
         game_over = true;
+        start_time = null;
         clearInterval(timer_interval);
         document.getElementById("status-info").textContent = "Completed";
 
