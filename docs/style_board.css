@@ -349,3 +349,12 @@
         transform: translateY(-40px);
     }
 }
+
+@keyframes progressShrink {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0;
+    }
+}
