@@ -643,7 +643,7 @@ function create_board() {
 }
 function formatNumber(n) {
     if (n === 0) {
-        return "";
+        return ' ';
     }
     if (n >= 1 && n <= 9) {
         return n.toString();
@@ -799,7 +799,6 @@ function toggle_container() {
         vertical.style.display = 'none';
     }
 }
-
 // Todo 2.3 - Update Game Information
 function update_cell_display(row, col) {
     const cell_element = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
