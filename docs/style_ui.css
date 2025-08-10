@@ -171,7 +171,7 @@ body.sidebar-collapsed .expand-button {
     width: 100%;
     display: flex;
 }
-.background-option {
+.option {
     color: rgba(255, 255, 255, 0.8) !important;
     flex: 1;
     padding: 8px 8px;
@@ -183,7 +183,7 @@ body.sidebar-collapsed .expand-button {
     color: #333;
     transition: all 0.2s ease;
 }
-.background-option:hover {
+.option:hover {
     background-color: rgba(220, 220, 220, 1);
     color: rgba(0, 0, 0, 1) !important;
 }

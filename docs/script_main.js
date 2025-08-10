@@ -667,6 +667,9 @@ function create_input_box() {
         const input = document.getElementById('empty-cells-input');
         input.focus();
         input.value = '';
+
+        document.getElementById('background-menu').style.display = 'none';
+        document.getElementById('background-btn').classList.remove('selected');
     }
 }
 function render_board_colors() {
@@ -985,6 +988,9 @@ function toggle_background_dropdown() {
     } else {
         menu.style.display = "block";
         document.getElementById('background-btn').classList.add('selected');
+
+        document.getElementById('difficulty-input-container').style.display = 'none';
+        document.getElementById('difficulty-btn').classList.remove('selected');
     }
 }
 function toggle_information() {
