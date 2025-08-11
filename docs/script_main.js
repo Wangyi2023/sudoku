@@ -641,7 +641,7 @@ function create_board() {
         }
     }
 }
-function formatNumber(n) {
+function format_number(n) {
     if (n === 0) {
         return ' ';
     }
@@ -738,12 +738,12 @@ function generate_number_buttons() {
         const button = document.createElement('button');
         button.className = 'number-button';
         button.dataset.number = i.toString();
-        button.textContent = formatNumber(i);
+        button.textContent = format_number(i);
 
         const button_vertical = document.createElement('button');
         button_vertical.className = 'number-button';
         button_vertical.dataset.number = i.toString();
-        button_vertical.textContent = formatNumber(i);
+        button_vertical.textContent = format_number(i);
 
         button.addEventListener('click', function () {
             const num = parseInt(this.dataset.number);
@@ -808,7 +808,7 @@ function update_cell_display(row, col) {
     if (!cell_element) return;
 
     const cell = main_board[row][col];
-    cell_element.textContent = formatNumber(cell.value);
+    cell_element.textContent = format_number(cell.value);
 
     cell_element.className = "cell";
 
