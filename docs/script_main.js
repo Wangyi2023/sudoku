@@ -483,11 +483,11 @@ function flash_conflicting_cells(row, col, num) {
     }
 
     conflicts.forEach(([r, c]) => {
-        const cellElement = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
-        cellElement.classList.add('conflict');
-        cellElement.style.animation = 'none';
+        const cell_element = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
+        cell_element.classList.add('conflict');
+        cell_element.style.animation = 'none';
         setTimeout(() => {
-            cellElement.style.animation = '';
+            cell_element.style.animation = '';
         }, 10);
     });
 
