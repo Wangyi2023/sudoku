@@ -50,7 +50,6 @@
 .cell.locked {
     color: white !important;
     font-weight: bold;
-    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
 }
 .cell:not(.filled):hover::after {
     content: attr(data-current-number);

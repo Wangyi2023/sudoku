@@ -676,8 +676,8 @@ function render_board_colors() {
     const boardElement = document.getElementById("board");
     const cells = boardElement.querySelectorAll('.cell');
 
-    const dark = 'rgba(0, 0, 0, 0.8)';
-    const light = 'rgba(0, 0, 0, 0.6)';
+    const dark = 'rgba(0, 0, 0, 0.9)';
+    const light = 'rgba(0, 0, 0, 0.75)';
 
     cells.forEach(cell => {
         const row = parseInt(cell.dataset.row);
