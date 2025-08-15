@@ -916,6 +916,10 @@ function send_notice(type, timeout = 4500) {
             notice_text.innerHTML = "0.o 难道他真是天才？";
             notice_progress.style.backgroundColor = 'rgba(0, 150, 255, 1)';
             break;
+        case 'copied':
+            notice_text.innerHTML = "Email address copied to clipboard.";
+            notice_progress.style.backgroundColor = 'rgba(0, 220, 80, 1)';
+            break;
         default:
             notice_text.innerHTML = "Notice.<br> Default Notice Content - 1024 0010 0024.";
             notice_progress.style.backgroundColor = 'rgba(0, 150, 255, 1)';
@@ -1068,6 +1072,22 @@ function close_all_sidebar_menus() {
     document.getElementById('background-menu').style.display = 'none';
     document.getElementById('background-btn').classList.remove('selected');
     shortcuts_enabled = true;
+}
+// Todo 2.6 - Text Copy
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text)
+        .then(() => {
+            send_notice('copied');
+        })
+        .catch((err) => {
+            const range = document.createRange();
+            range.selectNode(document.querySelector("#guide-content p"));
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            send_notice('copied');
+        });
 }
 
 
