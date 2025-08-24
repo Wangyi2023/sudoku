@@ -97,8 +97,7 @@ h2 {
     font-weight: bold;
     color: rgba(252, 252, 252, 0.8);
     padding: 16px 32px;
-    border-bottom: 2px solid #b8b8b8;
-    margin-bottom: 10px;
+    border-bottom: 2px solid rgba(220, 220, 220, 0.8);
     cursor: pointer;
 }
 .collapse-handle {
@@ -137,7 +136,7 @@ body.sidebar-collapsed .expand-button {
 }
 
 .controls {
-    margin-top: 20px;
+    margin-top: 24px;
 }
 .sidebar-button {
     position: relative;
